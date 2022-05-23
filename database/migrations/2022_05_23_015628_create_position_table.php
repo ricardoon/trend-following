@@ -15,7 +15,15 @@ return new class extends Migration
     {
         Schema::create('position', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('asset_id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('strategy'); // hilo, etc.
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('asset_id')->references('id')->on('assets');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->index('strategy');
         });
     }
 

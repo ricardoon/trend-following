@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('asset', function (Blueprint $table) {
+        Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->string('category');
+            $table->string('category'); //crypto, stock, option, etc.
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unique(['code', 'category']);
+            $table->index('category');
         });
     }
 
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset');
+        Schema::dropIfExists('assets');
     }
 };
