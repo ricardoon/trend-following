@@ -5,20 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        @hasSection('title')
+        <title>@yield('title') · {{ config('app.name') }}</title>
+        @else
+        <title>{{ config('app.name') }}</title>
+        @endif
+
+        {{-- Favicon --}}
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon-16x16.png') }}">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
         <!-- Styles -->
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+
+        @livewireStyles
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
+        @livewireScripts
     </body>
 </html>
