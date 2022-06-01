@@ -23,10 +23,20 @@ class AssetRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-        ];
+        $method = $this->method();
+        if ($method === 'PATCH') {
+            return [
+                'name' => 'sometimes|required|string|max:255',
+                'code' => 'sometimes|required|string|max:255',
+                'category' => 'sometimes|required|string|max:255',
+            ];
+        } else {
+            $bulk = strpos($this->path(), 'bulk') !== false ? '*.' : '';
+            return [
+                $bulk . 'name' => 'required|string|max:255',
+                $bulk . 'code' => 'required|string|max:255',
+                $bulk . 'category' => 'required|string|max:255|in:crypto,option,stock',
+            ];
+        }
     }
 }

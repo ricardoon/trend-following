@@ -6,22 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Asset extends Model
+class Position extends Model
 {
     use HasFactory,
         SoftDeletes;
 
     protected $fillable = [
-        'name', 'code', 'category'
+        'asset_id',
+        'user_id',
+        'strategy',
     ];
 
-    public function hilo()
+    function asset()
     {
-        return $this->hasOne(Hilo::class);
+        return $this->hasOne(Asset::class);
     }
 
-    public function positions()
+    function user()
     {
-        return $this->hasMany(Position::class);
+        return $this->belongsTo(User::class);
     }
 }

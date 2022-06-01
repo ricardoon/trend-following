@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hilo', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('asset_id');
+        Schema::create('hilos', function (Blueprint $table) {
+            $table->unsignedBigInteger('asset_id')->unique();
             $table->integer('lenght');
             $table->dateTime('last_check');
             $table->timestamps();

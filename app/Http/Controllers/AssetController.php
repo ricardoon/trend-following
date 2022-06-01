@@ -33,14 +33,18 @@ class AssetController extends BaseController
         );
     }
 
-    public function show($id)
+    public function bulkStore(AssetRequest $request)
     {
-        $asset = Asset::find($id);
+        $assets = Asset::insert($request->validated());
 
-        if (is_null($asset)) {
-            return $this->sendError('Asset not found.');
-        }
+        return $this->sendResponse(
+            $request->validated(),
+            'Assets created successfully.'
+        );
+    }
 
+    public function show(Asset $asset)
+    {
         return $this->sendResponse(
             new AssetResource($asset),
             'Asset retrieved successfully.'
@@ -54,7 +58,7 @@ class AssetController extends BaseController
 
     public function update(AssetRequest $request, Asset $asset)
     {
-        $asset->update($request->all());
+        $asset->update($request->validated());
 
         return $this->sendResponse(
             new AssetResource($asset),
@@ -66,6 +70,9 @@ class AssetController extends BaseController
     {
         $asset->delete();
 
-        return $this->sendResponse([], 'Asset deleted successfully.');
+        return $this->sendResponse(
+            new AssetResource($asset),
+            'Asset deleted successfully.'
+        );
     }
 }

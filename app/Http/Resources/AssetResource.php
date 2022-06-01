@@ -13,6 +13,7 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'code' => $this->code,
             'category' => $this->category,
+            'hilo' => new HiloResource($this->hilo),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
