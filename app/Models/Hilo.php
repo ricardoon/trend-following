@@ -15,6 +15,6 @@ class Hilo extends Model
 
     public function asset()
     {
-        return $this->belongsToOne(Asset::class);
+        return $this->belongsTo(Asset::class);
     }
 }

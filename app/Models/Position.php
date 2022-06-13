@@ -12,14 +12,14 @@ class Position extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'asset_id',
-        'user_id',
-        'strategy',
+        'asset_id', 'user_id', 'strategy', 'side',
+        'type', 'price', 'start_datetime',
+        'end_datetime', 'max_stop'
     ];
 
     function asset()
     {
-        return $this->hasOne(Asset::class);
+        return $this->belongsTo(Asset::class);
     }
 
     function user()

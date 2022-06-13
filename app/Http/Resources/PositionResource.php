@@ -6,14 +6,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PositionResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'asset' => new AssetResource($this->asset),
+            'strategy' => $this->strategy,
+            'side' => $this->side,
+            'type' => $this->type,
+            'price' => $this->price,
+            'start_datetime' => $this->start_datetime,
+            'end_datetime' => $this->end_datetime,
+            'max_stop' => $this->max_stop,
+        ];
     }
 }

@@ -2,83 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PositionRequest;
+use App\Http\Resources\PositionResource;
+use App\Models\Position;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class PositionController extends Controller
+class PositionController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $positions = Auth::user()->positions;
+
+        return $this->sendResponse(
+            PositionResource::collection($positions),
+            'Positions retrieved successfully.'
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(PositionRequest $request)
     {
-        //
+        $position = Auth::user()->positions()->where([
+            'asset_id' => $request->asset_id,
+            'end_datetime' => null,
+        ]);
+
+        if ($position->exists()) {
+            return $this->sendError(
+                'Position already exists.',
+                [
+                    'position' => new PositionResource($position->first()),
+                ],
+                422
+            );
+        }
+
+        $position = Auth::user()->positions()->create($request->validated());
+
+        return $this->sendResponse(
+            new PositionResource($position),
+            'Position created successfully.'
+        );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Position $position)
     {
-        //
+        return $this->sendResponse(
+            new PositionResource($position),
+            'Position retrieved successfully.'
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(PositionRequest $request, Position $position)
     {
-        //
+        $position->update($request->validated());
+
+        return $this->sendResponse(
+            new PositionResource($position),
+            'Position updated successfully.'
+        );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Position $position)
     {
-        //
+        $position->delete();
+
+        return $this->sendResponse(
+            new PositionResource($position),
+            'Position deleted successfully.'
+        );
     }
 }

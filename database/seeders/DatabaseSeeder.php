@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,5 +25,9 @@ class DatabaseSeeder extends Seeder
         dump($user->createToken('MyApp')->plainTextToken);
 
         \App\Models\Asset::factory(10)->create();
+
+        \App\Models\Position::factory(5)->create([
+            'user_id' => $user->id
+        ]);
     }
 }

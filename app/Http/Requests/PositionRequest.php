@@ -13,7 +13,7 @@ class PositionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,21 @@ class PositionRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+        if ($method === 'PATCH') {
+            return [
+                'side' => 'sometimes|string|max:255|in:buy,sell',
+                'type' => 'sometimes|string|max:255|in:market,limit',
+                'price' => 'sometimes|numeric',
+                'start_datetime' => 'sometimes|date',
+                'end_datetime' => 'sometimes|date',
+                'max_stop' => 'sometimes|numeric',
+            ];
+        } else {
+            return [
+                'asset_id' => 'required|integer',
+                'strategy' => 'required|string|max:255|in:hilo',
+            ];
+        }
     }
 }
