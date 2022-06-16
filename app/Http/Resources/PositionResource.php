@@ -12,11 +12,8 @@ class PositionResource extends JsonResource
             'id' => $this->id,
             'asset' => new AssetResource($this->asset),
             'strategy' => $this->strategy,
-            'side' => $this->side,
-            'type' => $this->type,
-            'price' => $this->price,
-            'start_datetime' => $this->start_datetime,
-            'end_datetime' => $this->end_datetime,
+            'started_at' => $this->start_datetime,
+            'ended_at' => $this->end_datetime,
             'max_stop' => $this->max_stop,
         ];
     }

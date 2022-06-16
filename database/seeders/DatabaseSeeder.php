@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Asset;
+use App\Models\Hilo;
+use App\Models\Order;
+use App\Models\Position;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,20 +19,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        $assets = Asset::factory(10)->create()->each(function ($asset) {
+            Hilo::factory(1)->create(
+                ['asset_id' => $asset->id]
+            );
+        });
 
-        $user = \App\Models\User::factory()->create([
+        $users = User::factory(10)->create()->each(function ($user) use ($assets) {
+            Position::factory(3)->create([
+                'user_id' => $user->id,
+                'asset_id' => $assets->random()->id,
+            ]);
+        });
+
+        // Create my user
+        $user = User::factory()->create([
             'name' => 'Ricardo Neto',
             'email' => 'ron2302@gmail.com',
             'password' => Hash::make('qwe123456')
         ]);
 
+        Position::factory(3)->create([
+            'user_id' => $user->id,
+            'asset_id' => $assets->random()->id,
+        ])->each(function ($position) {
+            $position->orders()->saveMany(
+                Order::factory(rand(1, 3))->make()
+            );
+        });
+
         dump($user->createToken('MyApp')->plainTextToken);
-
-        \App\Models\Asset::factory(10)->create();
-
-        \App\Models\Position::factory(5)->create([
-            'user_id' => $user->id
-        ]);
     }
 }

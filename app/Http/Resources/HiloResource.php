@@ -6,17 +6,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class HiloResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
-        return parent::toArray([
+        return [
+            'asset_id' => $this->asset_id,
             'length' => $this->length,
-            'last_check' => $this->last_check,
-        ]);
+            'last_check_at' => $this->last_check_at,
+        ];
     }
 }

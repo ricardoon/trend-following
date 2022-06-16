@@ -10,6 +10,7 @@
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.7",
+        "linwj/binance": "^2.2",
         "livewire/livewire": "^2.10"
     },
     "require-dev": {

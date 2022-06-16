@@ -10,7 +10,7 @@ class Hilo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'length', 'last_check'
+        'asset_id', 'length', 'last_check_at'
     ];
 
     public function asset()

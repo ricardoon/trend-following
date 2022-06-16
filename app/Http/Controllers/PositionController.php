@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PositionRequest;
 use App\Http\Resources\PositionResource;
 use App\Models\Position;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PositionController extends BaseController
@@ -29,7 +28,7 @@ class PositionController extends BaseController
     {
         $position = Auth::user()->positions()->where([
             'asset_id' => $request->asset_id,
-            'end_datetime' => null,
+            'ended_at' => null,
         ]);
 
         if ($position->exists()) {

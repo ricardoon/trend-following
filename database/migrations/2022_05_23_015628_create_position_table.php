@@ -18,11 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('asset_id');
             $table->unsignedBigInteger('user_id');
             $table->string('strategy'); // hilo, etc.
-            $table->string('side')->nullable(); // buy, sell, etc.
-            $table->string('type')->default('market'); // market, limit, etc.
-            $table->decimal('price')->nullable(); // limit price for the order
-            $table->dateTime('start_datetime')->nullable(); // start time of position
-            $table->dateTime('end_datetime')->nullable(); // end time of position
+            $table->dateTime('started_at')->nullable(); // start time of position
+            $table->dateTime('ended_at')->nullable(); // end time of position
             $table->decimal('max_stop')->nullable(); // max stop to enter
             $table->softDeletes();
             $table->timestamps();
@@ -40,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('position');
+        Schema::dropIfExists('positions');
     }
 };

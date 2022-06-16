@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('hilos', function (Blueprint $table) {
             $table->unsignedBigInteger('asset_id')->unique();
-            $table->integer('lenght');
-            $table->dateTime('last_check');
+            $table->integer('length');
+            $table->dateTime('last_check_at');
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hilo');
+        Schema::dropIfExists('hilos');
     }
 };
