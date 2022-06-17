@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('external_id')->nullable(); // external ID of the order. ex: order ID on a exchange.
             $table->string('side'); // buy, sell, etc.
             $table->decimal('entry_price')->nullable();
+            $table->decimal('exit_price')->nullable();
             $table->dateTime('started_at'); // start time of order
             $table->dateTime('ended_at')->nullable(); // end time of order
             $table->string('binance_client_order_id')->nullable(); // binance client order ID.

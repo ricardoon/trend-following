@@ -24,10 +24,19 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         $method = $this->method();
-        return [
-            'external_id' => 'sometimes|string|max:255',
-            'entry_price' => 'sometimes|numeric',
-            'side' => 'required|string|max:255',
-        ];
+        if ($method === 'PATCH') {
+            return [
+                'ended_at' => 'sometimes|date_format:Y-m-d H:i:s',
+                'exit_price' => 'sometimes|numeric',
+            ];
+        } else {
+            return [
+                'external_id' => 'required|string|max:255',
+                'binance_client_order_id' => 'required|string|max:255',
+                'side' => 'required|string|max:255',
+                'entry_price' => 'required|numeric',
+                'started_at' => 'required|date_format:Y-m-d H:i:s',
+            ];
+        }
     }
 }

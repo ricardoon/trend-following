@@ -27,7 +27,26 @@ class OrderController extends BaseController
 
     public function store(OrderRequest $request, Position $position)
     {
-        $order = $position->orders()->create($request->validated());
+        $order_validated = $request->validated();
+
+        // check if order already exists
+        $order = $position->orders()->where([
+            'external_id' => $order_validated['external_id'],
+            'binance_client_order_id' => $order_validated['binance_client_order_id'],
+            'side' => $order_validated['side']
+        ])->first();
+
+        if ($order) {
+            return $this->sendError(
+                'Order already exists.',
+                [
+                    'order' => new OrderResource($order->first()),
+                ],
+                422
+            );
+        }
+
+        $order = $position->orders()->create($order_validated);
 
         return $this->sendResponse(
             new OrderResource($order),
@@ -53,6 +72,10 @@ class OrderController extends BaseController
     public function update(OrderRequest $request, Position $position, $external_id)
     {
         $order = $position->orders()->where('external_id', $external_id)->first();
+
+        if (!$order) {
+            return $this->sendError('Order not found.');
+        }
 
         $order->update($request->validated());
 
