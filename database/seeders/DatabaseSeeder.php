@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
 
         Position::factory(3)->create([
             'user_id' => $user->id,
-            'asset_id' => $assets->random()->id,
+            'asset_id' => $assets->where('code', 'BTCUSDT')->first()->id,
         ])->each(function ($position) {
             $position->orders()->saveMany(
                 Order::factory(rand(1, 3))->make()

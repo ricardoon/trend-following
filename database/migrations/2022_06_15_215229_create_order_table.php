@@ -16,13 +16,15 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('position_id');
-            $table->string('external_id')->nullable(); // external ID of the order. ex: order ID on a exchange.
+            $table->string('external_id'); // external ID of the order. ex: order ID on a exchange.
             $table->string('side'); // buy, sell, etc.
-            $table->decimal('entry_price')->nullable();
-            $table->decimal('exit_price')->nullable();
+            $table->decimal('entry_price'); // price at which the order was placed.
+            $table->integer('quantity'); // quantity of the asset. ex: amount of BTC.
+            $table->decimal('size'); // size of the order. ex: amount of USDT.
+            $table->decimal('exit_price')->nullable(); // price at which the order was closed.
             $table->dateTime('started_at'); // start time of order
             $table->dateTime('ended_at')->nullable(); // end time of order
-            $table->string('binance_client_order_id')->nullable(); // binance client order ID.
+            $table->string('binance_client_order_id'); // binance client order ID.
             $table->softDeletes();
             $table->timestamps();
 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
-use App\Models\Order;
 use App\Models\Position;
-use Illuminate\Http\Request;
+use Lin\Binance\Binance;
+use Lin\Binance\BinanceFuture;
 
 class OrderController extends BaseController
 {
@@ -29,22 +29,72 @@ class OrderController extends BaseController
     {
         $order_validated = $request->validated();
 
-        // check if order already exists
+        dd($position);
+
+        // check if order for this asset already exists
         $order = $position->orders()->where([
-            'external_id' => $order_validated['external_id'],
-            'binance_client_order_id' => $order_validated['binance_client_order_id'],
-            'side' => $order_validated['side']
+            'side' => $order_validated['side'],
+            'ended_at' => null,
         ])->first();
 
         if ($order) {
             return $this->sendError(
                 'Order already exists.',
                 [
-                    'order' => new OrderResource($order->first()),
+                    'order' => new OrderResource($order),
                 ],
                 422
             );
         }
+
+        $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
+
+        // check if position exists in binance
+        try {
+            $binance_position = $binance->trade()->getPosition([
+                'symbol' => $position->asset->code,
+            ]);
+        } catch (\Exception $e) {
+            return $this->sendError(
+                'Error while checking position in binance for the asset.',
+                [
+                    'asset' => $position->asset->code,
+                ],
+                422
+            );
+        }
+
+        if (
+            ($binance_position[0]['positionAmt'] > 0 && $request->side == 'buy') ||
+            ($binance_position[0]['positionAmt'] < 0 && $request->side == 'sell')
+        ) {
+            return $this->sendError('Position already exists in binance.', $binance_position[0], 422);
+        }
+        die;
+
+        // try to create order on Binance
+        try {
+            // Make sure margin type is ISOLATED
+            $binance->trade()->postMarginType([
+                'symbol' => $position->asset->code,
+                'marginType' => 'ISOLATED',
+            ]);
+            // Make sure leverage is set to 2x
+            $binance->trade()->postLeverage([
+                'symbol' => $position->asset->code,
+                'leverage' => 2,
+            ]);
+            $result = $binance->trade()->postOrder([
+                'symbol' => $position->asset->code,
+                'side' => 'SELL',
+                'type' => 'MARKET',
+                'quantity' => '0.001',
+            ]);
+            print_r($result);
+        } catch (\Exception $e) {
+            return $this->sendError('Error creating order.', $e->getMessage());
+        }
+        sleep(1);
 
         $order = $position->orders()->create($order_validated);
 

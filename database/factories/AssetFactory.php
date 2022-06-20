@@ -10,7 +10,8 @@ class AssetFactory extends Factory
     {
         return [
             'name' => $this->faker->firstName(),
-            'code' => $this->faker->unique()->currencyCode(),
+            // 'code' => $this->faker->unique()->currencyCode(),
+            'code' => $this->faker->unique()->randomElement(['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'EOSUSDT', 'LTCUSDT', 'BCHUSDT', 'FTMUSDT', 'ADAUSDT', 'SOLUSDT']),
             'category' => $this->faker->randomElement(['crypto', 'option', 'stock']),
         ];
     }

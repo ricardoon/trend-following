@@ -31,11 +31,7 @@ class OrderRequest extends FormRequest
             ];
         } else {
             return [
-                'external_id' => 'required|string|max:255',
-                'binance_client_order_id' => 'required|string|max:255',
                 'side' => 'required|string|max:255',
-                'entry_price' => 'required|numeric',
-                'started_at' => 'required|date_format:Y-m-d H:i:s',
             ];
         }
     }
