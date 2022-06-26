@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('code');
             $table->string('category'); //crypto, stock, option, etc.
+            $table->integer('precision')->default(2); //number of decimal places
             $table->softDeletes();
             $table->timestamps();
 

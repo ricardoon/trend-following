@@ -12,7 +12,7 @@ class Asset extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'name', 'code', 'category'
+        'name', 'code', 'category', 'precision'
     ];
 
     public function hilo()
