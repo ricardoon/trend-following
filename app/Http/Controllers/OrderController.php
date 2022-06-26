@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Order;
 use App\Models\Position;
 use Lin\Binance\Binance;
 use Lin\Binance\BinanceFuture;
@@ -30,12 +31,9 @@ class OrderController extends BaseController
         $order_validated = $request->validated();
 
         // check if order for this asset already exists
-        $order = $position->orders()->where([
-            'side' => $order_validated['side'],
-            'ended_at' => null,
-        ])->first();
+        $order = $position->orders()->where('ended_at', null)->first();
 
-        if ($order) {
+        if ($order && $order->side == $order_validated['side']) {
             return $this->sendError(
                 'Order already exists.',
                 [
@@ -48,15 +46,14 @@ class OrderController extends BaseController
         // $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
         $binance = new BinanceFuture(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
-        // check if position exists in binance
+        // check if position already exists in binance
         try {
             $binance_position = $binance->trade()->getPosition([
                 'symbol' => $position->asset->code,
             ]);
-            dump($binance_position);
         } catch (\Exception $e) {
             return $this->sendError(
-                'Error while checking position in binance for the asset.',
+                'Error while checking position in Binance for the asset.',
                 [
                     'asset' => $position->asset->code,
                 ],
@@ -76,10 +73,9 @@ class OrderController extends BaseController
             $asset = $binance->trade()->getMarkPrice([
                 'symbol' => $position->asset->code,
             ]);
-            dump($asset);
         } catch (\Exception $e) {
             return $this->sendError(
-                'Error while getting price from binance for the asset.',
+                'Error while getting price from Binance for the asset.',
                 [
                     'asset' => $position->asset->code,
                 ],
@@ -87,7 +83,7 @@ class OrderController extends BaseController
             );
         }
 
-        $quantity = ($position->amount - 100) / $asset['markPrice'];
+        $quantity = round(($position->amount - 50) / $asset['markPrice'], $position->asset->precision, PHP_ROUND_HALF_DOWN);
 
         // check if we need to invert side
         if (
@@ -115,16 +111,38 @@ class OrderController extends BaseController
                 'type' => 'MARKET',
                 'quantity' => $quantity,
             ]);
-            print_r($result);
         } catch (\Exception $e) {
-            return $this->sendError('Error creating order.', $e->getMessage());
+            return $this->sendError('Error creating Binance order.', $e->getMessage());
         }
         sleep(1);
 
-        $order = $position->orders()->create($order_validated);
+        $order_validated['external_id'] = $result['orderId'];
+        $order_validated['binance_client_order_id'] = $result['clientOrderId'];
+
+        try {
+            $binance_position = $binance->trade()->getPosition([
+                'symbol' => $position->asset->code,
+            ]);
+        } catch (\Exception $e) {
+            return $this->sendError('Error getting just created Binance order.', $e->getMessage());
+        }
+
+        // end last order if exists
+        if ($order) {
+            Order::where('id', $order->id)->update([
+                'ended_at' => now(),
+            ]);
+        }
+
+        $order_validated['started_at'] = now();
+        $order_validated['entry_price'] = $binance_position[0]['entryPrice'];
+        $order_validated['quantity'] = $binance_position[0]['positionAmt'];
+        $order_validated['size'] = $binance_position[0]['isolatedMargin'];
+
+        $new_order = $position->orders()->create($order_validated);
 
         return $this->sendResponse(
-            new OrderResource($order),
+            new OrderResource($new_order),
             'Order created successfully.'
         );
     }

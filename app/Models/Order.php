@@ -12,9 +12,8 @@ class Order extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'position_id', 'side', 'entry_price',
-        'exit_price', 'started_at', 'ended_at',
-        'binance_client_order_id', 'external_id',
+        'position_id', 'side', 'entry_price', 'quantity', 'size', 'exit_price',
+        'started_at', 'ended_at', 'binance_client_order_id', 'external_id',
     ];
 
     protected $casts = [
