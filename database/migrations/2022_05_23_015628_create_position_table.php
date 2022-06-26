@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('asset_id');
             $table->unsignedBigInteger('user_id');
             $table->string('strategy'); // hilo, etc.
+            $table->decimal('amount'); // amount of asset to buy/sell
             $table->dateTime('started_at')->nullable(); // start time of position
             $table->dateTime('ended_at')->nullable(); // end time of position
             $table->decimal('max_stop')->nullable(); // max stop to enter

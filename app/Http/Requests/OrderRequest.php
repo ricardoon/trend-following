@@ -31,7 +31,7 @@ class OrderRequest extends FormRequest
             ];
         } else {
             return [
-                'side' => 'required|string|max:255',
+                'side' => 'required|string|in:buy,sell',
             ];
         }
     }

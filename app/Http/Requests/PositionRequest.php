@@ -28,12 +28,14 @@ class PositionRequest extends FormRequest
             return [
                 'started_at' => 'sometimes|date',
                 'ended_at' => 'sometimes|date',
+                'amount' => 'sometimes|numeric',
                 'max_stop' => 'sometimes|numeric',
             ];
         } else {
             return [
                 'asset_id' => 'required|integer',
                 'strategy' => 'required|string|max:255|in:hilo',
+                'amount' => 'required|numeric',
             ];
         }
     }

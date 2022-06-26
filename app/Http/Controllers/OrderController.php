@@ -29,8 +29,6 @@ class OrderController extends BaseController
     {
         $order_validated = $request->validated();
 
-        dd($position);
-
         // check if order for this asset already exists
         $order = $position->orders()->where([
             'side' => $order_validated['side'],
@@ -47,13 +45,15 @@ class OrderController extends BaseController
             );
         }
 
-        $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
+        // $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
+        $binance = new BinanceFuture(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
         // check if position exists in binance
         try {
             $binance_position = $binance->trade()->getPosition([
                 'symbol' => $position->asset->code,
             ]);
+            dump($binance_position);
         } catch (\Exception $e) {
             return $this->sendError(
                 'Error while checking position in binance for the asset.',
@@ -68,9 +68,34 @@ class OrderController extends BaseController
             ($binance_position[0]['positionAmt'] > 0 && $request->side == 'buy') ||
             ($binance_position[0]['positionAmt'] < 0 && $request->side == 'sell')
         ) {
-            return $this->sendError('Position already exists in binance.', $binance_position[0], 422);
+            return $this->sendError('Position ' . $request->side . ' already exists in binance.', $binance_position[0], 422);
         }
-        die;
+
+        // get price from binance
+        try {
+            $asset = $binance->trade()->getMarkPrice([
+                'symbol' => $position->asset->code,
+            ]);
+            dump($asset);
+        } catch (\Exception $e) {
+            return $this->sendError(
+                'Error while getting price from binance for the asset.',
+                [
+                    'asset' => $position->asset->code,
+                ],
+                422
+            );
+        }
+
+        $quantity = ($position->amount - 100) / $asset['markPrice'];
+
+        // check if we need to invert side
+        if (
+            ($binance_position[0]['positionAmt'] < 0 && $request->side == 'buy') ||
+            ($binance_position[0]['positionAmt'] > 0 && $request->side == 'sell')
+        ) {
+            $quantity *= 2;
+        }
 
         // try to create order on Binance
         try {
@@ -86,9 +111,9 @@ class OrderController extends BaseController
             ]);
             $result = $binance->trade()->postOrder([
                 'symbol' => $position->asset->code,
-                'side' => 'SELL',
+                'side' => strtoupper($request->side),
                 'type' => 'MARKET',
-                'quantity' => '0.001',
+                'quantity' => $quantity,
             ]);
             print_r($result);
         } catch (\Exception $e) {
