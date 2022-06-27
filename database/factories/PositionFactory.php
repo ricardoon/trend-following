@@ -11,6 +11,7 @@ class PositionFactory extends Factory
         return [
             'strategy' => 'hilo',
             'amount' => rand(500, 99999),
+            'max_stop' => rand(0, 10),
         ];
     }
 }

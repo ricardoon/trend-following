@@ -12,6 +12,7 @@ class AssetFactory extends Factory
             'name' => $this->faker->firstName(),
             // 'code' => $this->faker->unique()->currencyCode(),
             'code' => $this->faker->unique()->randomElement(['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'EOSUSDT', 'LTCUSDT', 'BCHUSDT', 'FTMUSDT', 'ADAUSDT', 'SOLUSDT']),
+            'yahoo_code' => $this->faker->unique()->randomElement(['BTC-USD', 'ETH-USD', 'BNB-USD', 'XRP-USD', 'EOS-USD', 'LTC-USD', 'BCH-USD', 'FTM-USD', 'ADA-USD', 'SOL-USD']),
             'category' => $this->faker->randomElement(['crypto', 'option', 'stock']),
             'precision' => $this->faker->numberBetween(3, 5),
         ];

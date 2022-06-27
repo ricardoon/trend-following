@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('asset_id')->unique();
             $table->integer('length');
             $table->dateTime('last_check_at');
+            $table->string('granularity');
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets');

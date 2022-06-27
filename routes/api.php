@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AssetController;
-use App\Http\Controllers\HiloController;
 use App\Http\Controllers\PositionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('hilos/{asset}', 'App\Http\Controllers\HiloController@show');
     Route::post('hilos', 'App\Http\Controllers\HiloController@store');
     Route::patch('hilos/{asset}', 'App\Http\Controllers\HiloController@update');
+    Route::post('hilos/{asset}/notify', 'App\Http\Controllers\HiloController@notify');
 
     // Positions
     Route::apiResource('positions', PositionController::class);

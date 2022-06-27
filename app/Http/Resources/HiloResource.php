@@ -12,6 +12,7 @@ class HiloResource extends JsonResource
             'asset_id' => $this->asset_id,
             'length' => $this->length,
             'last_check_at' => $this->last_check_at,
+            'granularity' => $this->granularity,
         ];
     }
 }

@@ -10,6 +10,13 @@ use App\Models\Hilo;
 class HiloController extends BaseController
 {
 
+    public function notify(HiloNotifyRequest $request, Asset $asset)
+    {
+
+
+        return $this->sendResponse(null, 'Hilo notified successfully.');
+    }
+
     public function index()
     {
         $hilos = Hilo::all();

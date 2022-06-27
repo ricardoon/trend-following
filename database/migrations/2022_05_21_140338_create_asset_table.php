@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
+            $table->string('yahoo_code'); // for Yahoo! Finance
             $table->string('category'); //crypto, stock, option, etc.
             $table->integer('precision')->default(2); //number of decimal places
             $table->softDeletes();
