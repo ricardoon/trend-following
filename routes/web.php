@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,6 +9,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        print(Auth::user()->createToken('MyApp')->plainTextToken);
         return view('dashboard');
     })->name('dashboard');
 
@@ -20,4 +22,4 @@ Route::middleware('auth')->group(function () {
     })->name('settings');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
