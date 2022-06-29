@@ -41,6 +41,16 @@ class AssetController extends BaseController
             }
         }
 
+        if (!isset($asset_validated['price_precision'])) {
+            return $this->sendError(
+                'Asset ' . $asset_validated['code'] . ' not found in Binance.',
+                [
+                    'binance_symbols' => $exchange_info['symbols'],
+                ],
+                422
+            );
+        }
+
         $asset = Asset::create($asset_validated);
 
         return $this->sendResponse(

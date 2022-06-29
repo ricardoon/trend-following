@@ -12,8 +12,8 @@ class Asset extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'name', 'code', 'yahoo_code',
-        'category', 'precision'
+        'name', 'code', 'yahoo_code', 'category',
+        'price_precision', 'quantity_precision', 'quote_precision',
     ];
 
     public function hilo()
