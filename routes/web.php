@@ -9,7 +9,6 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        print(Auth::user()->createToken('MyApp')->plainTextToken);
         return view('dashboard');
     })->name('dashboard');
 

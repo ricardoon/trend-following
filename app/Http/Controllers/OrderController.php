@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Libraries\Binance;
 use App\Models\Order;
 use App\Models\Position;
-use Lin\Binance\Binance;
-use Lin\Binance\BinanceFuture;
 
 class OrderController extends BaseController
 {
@@ -43,8 +42,8 @@ class OrderController extends BaseController
             );
         }
 
-        // $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
-        $binance = new BinanceFuture(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
+        // $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
+        $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
         // check if position already exists in binance
         try {

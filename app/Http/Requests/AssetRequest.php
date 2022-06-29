@@ -20,7 +20,9 @@ class AssetRequest extends FormRequest
                 'code' => 'sometimes|string|max:255',
                 'yahoo_code' => 'sometimes|string|max:255',
                 'category' => 'sometimes|string|max:255',
-                'precision' => 'sometimes|integer',
+                'price_precision' => 'sometimes|integer',
+                'quantity_precision' => 'sometimes|integer',
+                'quote_precision' => 'sometimes|integer',
             ];
         } else {
             $bulk = strpos($this->path(), 'bulk') !== false ? '*.' : '';
@@ -29,7 +31,9 @@ class AssetRequest extends FormRequest
                 $bulk . 'code' => 'required|string|max:255',
                 $bulk . 'yahoo_code' => 'required|string|max:255',
                 $bulk . 'category' => 'required|string|max:255|in:crypto,option,stock',
-                $bulk . 'precision' => 'sometimes|integer',
+                $bulk . 'price_precision' => 'sometimes|integer',
+                $bulk . 'quantity_precision' => 'sometimes|integer',
+                $bulk . 'quote_precision' => 'sometimes|integer',
             ];
         }
     }

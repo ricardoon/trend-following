@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AssetRequest;
 use App\Http\Resources\AssetResource;
+use App\Libraries\Binance;
 use App\Models\Asset;
-use Lin\Binance\BinanceFuture;
 
 class AssetController extends BaseController
 {
@@ -28,13 +28,15 @@ class AssetController extends BaseController
     {
         $asset_validated = $request->validated();
 
-        $binance = new BinanceFuture(config('binance.api_key'), config('binance.api_secret'));
+        $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
 
         $exchange_info = $binance->trade()->getExchangeInfo();
 
         foreach ($exchange_info['symbols'] as $symbol) {
             if ($symbol['symbol'] == $asset_validated['code']) {
-                $asset_validated['precision'] = $symbol['baseAssetPrecision'];
+                $asset_validated['price_precision'] = $symbol['pricePrecision'];
+                $asset_validated['quantity_precision'] = $symbol['quantityPrecision'];
+                $asset_validated['quote_precision'] = $symbol['quotePrecision'];
                 break;
             }
         }
