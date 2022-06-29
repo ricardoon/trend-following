@@ -19,6 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', function () {
         return view('dashboard');
     })->name('settings');
+
+    Route::get('/api', function () {
+        dump(Auth::user()->createToken('MyApp')->plainTextToken);
+    })->name('settings');
 });
 
 require __DIR__ . '/auth.php';
