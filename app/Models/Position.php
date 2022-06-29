@@ -12,8 +12,8 @@ class Position extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'asset_id', 'user_id', 'strategy', 'amount',
-        'started_at', 'ended_at', 'max_stop'
+        'asset_id', 'user_id', 'strategy', 'granularity',
+        'amount', 'started_at', 'ended_at', 'max_stop'
     ];
 
     function asset()

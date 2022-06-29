@@ -20,10 +20,9 @@ class HiloRequest extends FormRequest
             ];
         } else {
             $rules = [
-                'asset_id' => 'required|integer|unique:hilos,asset_id',
                 'length' => 'required|integer',
-                'last_check_at' => 'required|date',
                 'granularity' => 'required|string|in:1m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M',
+                'last_check_at' => 'required|date',
             ];
         }
 

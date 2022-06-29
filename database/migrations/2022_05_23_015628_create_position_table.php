@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('asset_id');
             $table->unsignedBigInteger('user_id');
             $table->string('strategy'); // hilo, etc.
+            $table->string('granularity'); // 1m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
             $table->decimal('amount'); // amount of asset to buy/sell
             $table->dateTime('started_at')->nullable(); // start time of position
             $table->dateTime('ended_at')->nullable(); // end time of position

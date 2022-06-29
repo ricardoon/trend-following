@@ -16,9 +16,9 @@ class Asset extends Model
         'price_precision', 'quantity_precision', 'quote_precision',
     ];
 
-    public function hilo()
+    public function hilos()
     {
-        return $this->hasOne(Hilo::class);
+        return $this->hasMany(Hilo::class);
     }
 
     public function positions()

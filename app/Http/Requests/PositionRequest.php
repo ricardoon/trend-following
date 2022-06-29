@@ -6,21 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PositionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         $method = $this->method();
@@ -35,6 +25,7 @@ class PositionRequest extends FormRequest
             return [
                 'asset_id' => 'required|integer',
                 'strategy' => 'required|string|max:255|in:hilo',
+                'granularity' => 'required|string|max:255|in:1m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M',
                 'amount' => 'required|numeric',
             ];
         }

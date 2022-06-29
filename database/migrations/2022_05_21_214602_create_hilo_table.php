@@ -14,13 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('hilos', function (Blueprint $table) {
-            $table->unsignedBigInteger('asset_id')->unique();
+            $table->unsignedBigInteger('asset_id');
             $table->integer('length');
-            $table->dateTime('last_check_at');
-            $table->string('granularity');
+            $table->dateTime('last_check_at'); // last time the hilo was checked for new data
+            $table->string('granularity'); // 1d, 1h, 1m, 1s
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets');
+            $table->unique(['asset_id', 'granularity']);
         });
     }
 

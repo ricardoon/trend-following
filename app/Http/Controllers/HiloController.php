@@ -13,6 +13,7 @@ class HiloController extends BaseController
 
     public function notify(HiloNotifyRequest $request, Asset $asset)
     {
+        dd($asset->positions->where('granularity', $request->granularity));
         foreach ($asset->positions as $position) {
             $orders = $position->orders()->where('ended_at', null)->first();
 
@@ -36,9 +37,13 @@ class HiloController extends BaseController
         );
     }
 
-    public function show(Asset $asset)
+    public function show($asset_id, $granularity)
     {
-        $hilo = $asset->hilo;
+        $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->first();
+
+        if (!$hilo) {
+            return $this->sendError('Hilo not found for this granularity.', 404);
+        }
 
         return $this->sendResponse(
             new HiloResource($hilo),
@@ -46,13 +51,16 @@ class HiloController extends BaseController
         );
     }
 
-    public function store(HiloRequest $request)
+    public function store(HiloRequest $request, $asset_id)
     {
-        if (Asset::find($request->asset_id) == null) {
-            return $this->sendError('Asset not found. Please check the asset_id.');
+        if (Asset::find($asset_id) == null) {
+            return $this->sendError('Asset not found. Please check the asset ID.');
         }
 
-        $hilo = Hilo::create($request->validated());
+        $validated = $request->validated();
+        $validated['asset_id'] = $asset_id;
+
+        $hilo = Hilo::create($validated);
 
         return $this->sendResponse(
             new HiloResource($hilo),
@@ -60,10 +68,15 @@ class HiloController extends BaseController
         );
     }
 
-    public function update(HiloRequest $request, Asset $asset)
+    public function update(HiloRequest $request, $asset_id, $granularity)
     {
-        Hilo::where('asset_id', $asset->id)->update($request->validated());
-        $hilo = $asset->hilo;
+        $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->update($request->validated());
+
+        if (!$hilo) {
+            return $this->sendError('Hilo not found for this granularity.', 404);
+        }
+
+        $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->first();
 
         return $this->sendResponse(
             new HiloResource($hilo),
