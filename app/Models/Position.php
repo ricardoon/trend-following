@@ -16,17 +16,22 @@ class Position extends Model
         'amount', 'started_at', 'ended_at', 'max_stop'
     ];
 
-    function asset()
+    public function scopeActive($query)
+    {
+        $query->where('ended_at', null);
+    }
+
+    public function asset()
     {
         return $this->belongsTo(Asset::class);
     }
 
-    function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    function orders()
+    public function orders()
     {
         return $this->hasMany(Order::class);
     }

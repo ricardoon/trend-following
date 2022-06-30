@@ -11,15 +11,35 @@ use App\Models\Hilo;
 class HiloController extends BaseController
 {
 
-    public function notify(HiloNotifyRequest $request, Asset $asset)
+    public function notify(HiloNotifyRequest $request, $asset_id, $granularity)
     {
-        dd($asset->positions->where('granularity', $request->granularity));
-        foreach ($asset->positions as $position) {
-            $orders = $position->orders()->where('ended_at', null)->first();
+        $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->first();
+
+        if (!$hilo) {
+            return $this->sendError('Hilo data for this asset and granularity not found.');
+        }
+
+        // get active positions
+        $positions = $hilo->asset->positions()->active()->get();
+
+        if ($positions->count() === 0) {
+            return $this->sendError('No active positions for this asset and granularity.');
+        }
+
+        foreach ($positions as $position) {
+            $orders = $position->orders()->active()->get();
+
+            if (!$orders) {
+                continue;
+            }
 
             foreach ($orders as $order) {
                 if ($order->side != $request->action) {
                     // change order side
+                    dd('change order side');
+                } else {
+                    // maintain order side
+                    dd('maintain order side');
                 }
             }
         }

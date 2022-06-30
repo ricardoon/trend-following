@@ -21,6 +21,11 @@ class Order extends Model
         'exit_price' => 'float',
     ];
 
+    public function scopeActive($query)
+    {
+        $query->where('ended_at', null);
+    }
+
     public function position()
     {
         return $this->belongsTo(Position::class);
