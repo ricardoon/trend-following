@@ -51,32 +51,27 @@ class HiloController extends BaseController
         );
     }
 
-    public function store(HiloRequest $request, $asset_id)
+    public function update(HiloRequest $request, $asset_id, $granularity)
     {
+        if (!in_array($granularity, ['1m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M'])) {
+            return $this->sendError('Granularity not supported.', 400);
+        }
+
         if (Asset::find($asset_id) == null) {
             return $this->sendError('Asset not found. Please check the asset ID.');
         }
 
-        $validated = $request->validated();
-        $validated['asset_id'] = $asset_id;
-
-        $hilo = Hilo::create($validated);
-
-        return $this->sendResponse(
-            new HiloResource($hilo),
-            'Hilo created successfully.'
-        );
-    }
-
-    public function update(HiloRequest $request, $asset_id, $granularity)
-    {
-        $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->update($request->validated());
-
-        if (!$hilo) {
-            return $this->sendError('Hilo not found for this granularity.', 404);
-        }
-
         $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->first();
+
+        if ($hilo) {
+            Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->update($request->validated());
+            $hilo = Hilo::where('asset_id', $asset_id)->where('granularity', $granularity)->first();
+        } else {
+            $validated = $request->validated();
+            $validated['asset_id'] = $asset_id;
+            $validated['granularity'] = $granularity;
+            $hilo = Hilo::create($validated);
+        }
 
         return $this->sendResponse(
             new HiloResource($hilo),
