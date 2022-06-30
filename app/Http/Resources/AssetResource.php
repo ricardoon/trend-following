@@ -17,7 +17,7 @@ class AssetResource extends JsonResource
             'price_precision' => $this->price_precision,
             'quantity_precision' => $this->quantity_precision,
             'quote_precision' => $this->quote_precision,
-            'hilo' => new HiloResource($this->hilo),
+            'hilos' => HiloResource::collection($this->hilos),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
