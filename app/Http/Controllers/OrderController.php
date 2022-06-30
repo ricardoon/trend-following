@@ -150,6 +150,10 @@ class OrderController extends BaseController
     {
         $order = $position->orders()->where('external_id', $external_id)->first();
 
+        if (!$order) {
+            return $this->sendError('Order not found.');
+        }
+
         return $this->sendResponse(
             new OrderResource($order),
             'Order retrieved successfully.'
