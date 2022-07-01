@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HiloNotifyRequest;
 use App\Http\Requests\HiloRequest;
 use App\Http\Resources\HiloResource;
+use App\Libraries\Binance;
 use App\Models\Asset;
 use App\Models\Hilo;
+use Illuminate\Support\Facades\Log;
 
 class HiloController extends BaseController
 {
@@ -19,6 +21,8 @@ class HiloController extends BaseController
             return $this->sendError('Hilo data for this asset and granularity not found.');
         }
 
+        $symbol = $hilo->asset->code;
+
         // get active positions
         $positions = $hilo->asset->positions()->active()->get();
 
@@ -27,20 +31,34 @@ class HiloController extends BaseController
         }
 
         foreach ($positions as $position) {
-            $orders = $position->orders()->active()->get();
 
-            if (!$orders) {
+            $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
+
+            try {
+                $binance_position = $binance->trade()->getPosition([
+                    'symbol' => $symbol,
+                ]);
+            } catch (\Exception $e) {
+                Log::channel('slack')->critical("Can't get position in Binance.", [
+                    'asset' => $symbol,
+                    'user' => $position->user->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            // get active orders for this position
+            $order = $position->orders()->active()->first();
+
+            if (!$order) {
                 continue;
             }
 
-            foreach ($orders as $order) {
-                if ($order->side != $request->action) {
-                    // change order side
-                    dd('change order side');
-                } else {
-                    // maintain order side
-                    dd('maintain order side');
-                }
+            if ($order->side != $request->action) {
+                // change order side
+                dd('change order side');
+            } else {
+                // maintain order side
+                dd('maintain order side');
             }
         }
 
