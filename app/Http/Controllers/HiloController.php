@@ -45,11 +45,11 @@ class HiloController extends BaseController
                     $binance_position = $binance->trade()->getPosition([
                         'symbol' => $symbol,
                     ])[0];
-                    dump($binance_position);
+                    // dump($binance_position);
                     $has_position = $binance_position['positionAmt'] != 0 ? true : false;
-                    dump($has_position);
+                    // dump($has_position);
                     $is_short = $binance_position['positionAmt'] < 0 ? true : false;
-                    dump($is_short);
+                    // dump($is_short);
                 } catch (\Exception $e) {
                     Log::channel('slack')->alert("Can't get position in Binance.", [
                         'asset' => $symbol,
