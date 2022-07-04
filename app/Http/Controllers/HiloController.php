@@ -71,7 +71,7 @@ class HiloController extends BaseController
                 }
             }
 
-            if ($order->side == $request->action) {
+            if ($order->side != $request->action) {
                 // change order side
                 $log_message = 'Position order changed side';
             } else {
