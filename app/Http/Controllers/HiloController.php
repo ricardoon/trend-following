@@ -29,62 +29,67 @@ class HiloController extends BaseController
         $positions = $hilo->asset->positions()->active()->get();
 
         if ($positions->count() === 0) {
-            return $this->sendError('No active positions for this asset and granularity.');
-        }
+            Log::info('No active positions for this asset and granularity.', [
+                'asset' => $symbol,
+                'action' => $request->action,
+                'hilo' => $hilo,
+            ]);
+        } else {
 
-        foreach ($positions as $position) {
+            foreach ($positions as $position) {
 
-            // $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
-            $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
+                // $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
+                $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
-            try {
-                $binance_position = $binance->trade()->getPosition([
-                    'symbol' => $symbol,
-                ])[0];
-                dump($binance_position);
-                $has_position = $binance_position['positionAmt'] != 0 ? true : false;
-                dump($has_position);
-                $is_short = $binance_position['positionAmt'] < 0 ? true : false;
-                dump($is_short);
-            } catch (\Exception $e) {
-                Log::channel('slack')->alert("Can't get position in Binance.", [
+                try {
+                    $binance_position = $binance->trade()->getPosition([
+                        'symbol' => $symbol,
+                    ])[0];
+                    dump($binance_position);
+                    $has_position = $binance_position['positionAmt'] != 0 ? true : false;
+                    dump($has_position);
+                    $is_short = $binance_position['positionAmt'] < 0 ? true : false;
+                    dump($is_short);
+                } catch (\Exception $e) {
+                    Log::channel('slack')->alert("Can't get position in Binance.", [
+                        'asset' => $symbol,
+                        'user' => $position->user->email,
+                        'error' => $e->getMessage(),
+                    ]);
+                    continue;
+                }
+
+                // get active order for this position
+                $order = $position->orders()->active()->first();
+
+                if (!$order) {
+                    // create order if no active order exists and binance position exists
+                    if ($has_position) {
+                        $order = $position->orders()->create([
+                            'side' => $is_short ? 'sell' : 'buy',
+                            'entry_price' => $binance_position['entryPrice'],
+                            'quantity' => $binance_position['positionAmt'],
+                            'size' => ($binance_position['positionAmt'] * $binance_position['entryPrice']) * -1,
+                            'started_at' => now(),
+                        ]);
+                    }
+                }
+
+                if ($order->side != $request->action) {
+                    // change order side
+                    $log_message = 'Position order changed side';
+                } else {
+                    // maintain order side
+                    $log_message = 'Maintain position order';
+                }
+
+                Log::info($log_message, [
                     'asset' => $symbol,
                     'user' => $position->user->email,
-                    'error' => $e->getMessage(),
+                    'action' => $request->action,
+                    'order' => $order,
                 ]);
-                continue;
             }
-
-            // get active order for this position
-            $order = $position->orders()->active()->first();
-
-            if (!$order) {
-                // create order if no active order exists and binance position exists
-                if ($has_position) {
-                    $order = $position->orders()->create([
-                        'side' => $is_short ? 'sell' : 'buy',
-                        'entry_price' => $binance_position['entryPrice'],
-                        'quantity' => $binance_position['positionAmt'],
-                        'size' => ($binance_position['positionAmt'] * $binance_position['entryPrice']) * -1,
-                        'started_at' => now(),
-                    ]);
-                }
-            }
-
-            if ($order->side != $request->action) {
-                // change order side
-                $log_message = 'Position order changed side';
-            } else {
-                // maintain order side
-                $log_message = 'Maintain position order';
-            }
-
-            Log::info($log_message, [
-                'asset' => $symbol,
-                'user' => $position->user->email,
-                'action' => $request->action,
-                'order' => $order,
-            ]);
         }
 
         return $this->sendResponse(null, 'Hilo notified successfully.');
