@@ -89,9 +89,9 @@ class HiloController extends BaseController
         return $this->sendResponse(null, 'Hilo notified successfully.');
     }
 
-    public function index()
+    public function index($asset_id)
     {
-        $hilos = Hilo::all();
+        $hilos = Asset::find($asset_id)->hilos()->get();
 
         return $this->sendResponse(
             HiloResource::collection($hilos),

@@ -15,10 +15,10 @@ Route::domain('api.' . env('APP_DOMAIN'))->group(function () {
         Route::apiResource('assets', AssetController::class);
         Route::post('assets/bulk', 'App\Http\Controllers\AssetController@bulkStore');
         // Assets Hilos
-        Route::get('assets/{id}/hilos', 'App\Http\Controllers\HiloController@index');
-        Route::get('assets/{id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@show');
-        Route::put('assets/{id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@update');
-        Route::post('assets/{id}/hilos/{granularity}/notify', 'App\Http\Controllers\HiloController@notify');
+        Route::get('assets/{asset_id}/hilos', 'App\Http\Controllers\HiloController@index');
+        Route::get('assets/{asset_id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@show');
+        Route::put('assets/{asset_id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@update');
+        Route::post('assets/{asset_id}/hilos/{granularity}/notify', 'App\Http\Controllers\HiloController@notify');
 
         // Positions
         Route::apiResource('positions', PositionController::class);
