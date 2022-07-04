@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('external_id')->nullable(); // external ID of the order. ex: order ID on a exchange.
             $table->string('side'); // buy, sell, etc.
             $table->decimal('entry_price'); // price at which the order was placed.
-            $table->integer('quantity'); // quantity of the asset. ex: amount of BTC.
+            $table->decimal('quantity', 8, 36); // quantity of the asset. ex: amount of BTC.
             $table->decimal('size'); // size of the order. ex: amount of USDT.
             $table->decimal('exit_price')->nullable(); // price at which the order was closed.
             $table->dateTime('started_at')->useCurrent(); // start time of order

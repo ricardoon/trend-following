@@ -66,6 +66,7 @@ class HiloController extends BaseController
                         'entry_price' => $binance_position['entryPrice'],
                         'quantity' => $binance_position['positionAmt'],
                         'size' => ($binance_position['positionAmt'] * $binance_position['entryPrice']) * -1,
+                        'started_at' => now(),
                     ]);
                 }
             }
