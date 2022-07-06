@@ -19,7 +19,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('strategy'); // hilo, etc.
             $table->string('granularity'); // 1m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
-            $table->decimal('amount'); // amount of asset to buy/sell
+            $table->decimal('initial_amount', 36, 18); // initial amount of asset to buy/sell
+            $table->integer('leverage')->default(1); // leverage of the position. ex: 1x, 2x, 3x, etc.
+            $table->decimal('amount', 36, 18)->nullable(); // current amount of asset
             $table->dateTime('started_at')->nullable(); // start time of position
             $table->dateTime('ended_at')->nullable(); // end time of position
             $table->decimal('max_stop')->nullable(); // max stop to enter

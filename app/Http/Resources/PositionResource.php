@@ -11,6 +11,8 @@ class PositionResource extends JsonResource
         return [
             'id' => $this->id,
             'asset' => new AssetResource($this->asset),
+            'inital_amount' => $this->initial_amount,
+            'leverage' => $this->leverage,
             'amount' => $this->amount,
             'strategy' => $this->strategy,
             'granularity' => $this->granularity,

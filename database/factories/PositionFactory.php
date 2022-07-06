@@ -10,7 +10,8 @@ class PositionFactory extends Factory
     {
         return [
             'strategy' => 'hilo',
-            'amount' => rand(500, 99999),
+            'initial_amount' => rand(500, 99999),
+            'leverage' => rand(1, 10),
             'granularity' => '1d',
             'max_stop' => rand(0, 10),
         ];

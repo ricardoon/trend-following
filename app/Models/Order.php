@@ -26,6 +26,19 @@ class Order extends Model
         $query->where('ended_at', null);
     }
 
+    public function close($data = [])
+    {
+        $this->ended_at = now();
+
+        if (!empty($data['exit_price'])) {
+            $this->exit_price = $data['exit_price'];
+        }
+
+        $this->save();
+
+        return null;
+    }
+
     public function position()
     {
         return $this->belongsTo(Position::class);

@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('asset_id');
             $table->dateTime('date');
-            $table->decimal('open');
-            $table->decimal('high');
-            $table->decimal('low');
-            $table->decimal('close');
-            $table->decimal('adj_close');
+            $table->decimal('open', 36, 18);
+            $table->decimal('high', 36, 18);
+            $table->decimal('low', 36, 18);
+            $table->decimal('close', 36, 18);
+            $table->decimal('adj_close', 36, 18);
             $table->bigInteger('volume');
             $table->timestamps();
 

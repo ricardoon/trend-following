@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 use Exception;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class Binance
 {

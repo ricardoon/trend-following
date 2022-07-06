@@ -13,7 +13,8 @@ class Position extends Model
 
     protected $fillable = [
         'asset_id', 'user_id', 'strategy', 'granularity',
-        'amount', 'started_at', 'ended_at', 'max_stop'
+        'initial_amount', 'leverage', 'amount',
+        'started_at', 'ended_at', 'max_stop'
     ];
 
     public function scopeActive($query)

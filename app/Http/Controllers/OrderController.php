@@ -82,7 +82,7 @@ class OrderController extends BaseController
             );
         }
 
-        $quantity = round(($position->amount - 50) / $asset['markPrice'], $position->asset->precision, PHP_ROUND_HALF_DOWN);
+        $quantity = round(($position->amount - 50) / $asset['markPrice'], $position->asset->price_precision, PHP_ROUND_HALF_DOWN);
 
         // check if we need to invert side
         if (
