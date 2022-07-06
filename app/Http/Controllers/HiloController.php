@@ -79,7 +79,7 @@ class HiloController extends BaseController
 
                     // close position on Binance
                     try {
-                        $result = $binance->trade()->postOrder([
+                        $binance->trade()->postOrder([
                             'symbol' => $symbol,
                             'side' => strtoupper($request->action),
                             'type' => 'MARKET',
@@ -99,7 +99,7 @@ class HiloController extends BaseController
                     // change position side
                     $log_message = 'Position order changed side from ' . $position_side . ' to ' . $request->action . '.';
                 } else {
-                    // check if max stop loss for position let me create one now
+                    // check if max stop loss for position lets me create one now
                     $current_stop = (($request->hilo_price / $binance_position['markPrice']) - 1) * 100;
                     if ($position->max_stop < $current_stop) {
                         Log::info("Max stop not reached. Don't create position yet.", [
