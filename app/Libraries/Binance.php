@@ -36,9 +36,46 @@ class Binance
         $this->options = $options;
     }
 
+    public function account()
+    {
+        return new Account($this->init());
+    }
+
     public function trade()
     {
         return new Trade($this->init());
+    }
+}
+
+class Account extends Request
+{
+    //Default required HMAC SHA256
+    protected $signature = true;
+
+    //Default seting
+    protected $version = 'v2';
+
+    function __construct(array $data)
+    {
+        parent::__construct($data);
+
+        $this->data['timestamp'] = time() . '000';
+    }
+
+    public function getInfo(array $data = [])
+    {
+        $this->type = 'get';
+        $this->path = '/fapi/' . $this->version . '/account';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function getBalance(array $data = [])
+    {
+        $this->type = 'get';
+        $this->path = '/fapi/' . $this->version . '/balance';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
     }
 }
 
