@@ -56,6 +56,7 @@ class AssetController extends BaseController
         }
 
         // download crypto asset image
+        $filename = $asset_validated['category'] . '/';
         try {
             $client = new \GuzzleHttp\Client();
             $response = $client->request('get', 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=' . $asset_code, [
@@ -68,11 +69,12 @@ class AssetController extends BaseController
                 $logo_url = $data[0]['logo'];
                 break;
             }
-            $filename = $asset_validated['category'] . '/' . $asset_code . '.png';
+            $filename .= $asset_code . '.png';
             $contents = file_get_contents($logo_url);
             Storage::disk('public')->put($filename, $contents);
             $asset_validated['image'] = $filename;
         } catch (\Exception $e) {
+            $asset_validated['image'] = $filename . 'default.png';
             Log::channel('slack')->alert("Can't download logo for asset " . $asset_code, [
                 'error' => $e->getMessage(),
             ]);

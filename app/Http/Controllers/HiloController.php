@@ -25,7 +25,7 @@ class HiloController extends BaseController
         }
 
         $symbol = $hilo->asset->code;
-        $price_precision = $hilo->asset->price_precision;
+        $quantity_precision = $hilo->asset->quantity_precision;
 
         // get active positions
         $positions = $hilo->asset->positions()->active()->get();
@@ -143,7 +143,7 @@ class HiloController extends BaseController
                 $position_amount = $position_amount <= $usdt_balance ? $position_amount : $usdt_balance;
                 // remove 2% for margin
                 $quantity = ($position_amount * 0.98) / $asset_price;
-                $quantity = round($quantity * $position->leverage, $price_precision, PHP_ROUND_HALF_DOWN);
+                $quantity = round($quantity * $position->leverage, $quantity_precision, PHP_ROUND_HALF_DOWN);
 
                 Log::info($log_message, [
                     'asset' => $symbol,
@@ -155,10 +155,10 @@ class HiloController extends BaseController
                 // try to create position on Binance
                 try {
                     // Make sure margin type is ISOLATED
-                    $binance->trade()->postMarginType([
-                        'symbol' => $symbol,
-                        'marginType' => 'ISOLATED',
-                    ]);
+                    // $binance->trade()->postMarginType([
+                    //     'symbol' => $symbol,
+                    //     'marginType' => 'ISOLATED',
+                    // ]);
                     // Make sure leverage is set to position leverage
                     $binance->trade()->postLeverage([
                         'symbol' => $symbol,
@@ -196,7 +196,8 @@ class HiloController extends BaseController
                 if ($binance_position['positionAmt'] != 0) {
                     $log_message = 'Position created in binance.';
                     $position->update([
-                        'amount' => $binance_position['isolatedMargin']
+                        'amount' => $binance_position['isolatedMargin'],
+                        'started_at' => $position->started_at ?? now(),
                     ]);
                 } else {
                     $log_message = 'Position not created in binance.';

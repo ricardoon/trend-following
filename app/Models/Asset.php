@@ -12,7 +12,7 @@ class Asset extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'name', 'code', 'yahoo_code', 'category',
+        'name', 'code', 'yahoo_code', 'category', 'image',
         'price_precision', 'quantity_precision', 'quote_precision',
     ];
 

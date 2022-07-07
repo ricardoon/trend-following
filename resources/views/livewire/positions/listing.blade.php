@@ -23,6 +23,7 @@
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{ __('Amount') }}</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{ __('Status') }}</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{ __('Strategy') }}</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{ __('Started at') }}</th>
                                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                         <span class="sr-only">{{ __('Actions') }}</span>
                                     </th>
@@ -38,20 +39,21 @@
                                             </div>
                                             <div class="ml-4">
                                                 <div class="font-medium text-gray-900">{{ $position->asset->name }}</div>
-                                                <div class="text-gray-500">{{ $position->asset->symbol }}</div>
+                                                <div class="text-gray-500">{{ $position->asset->code }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                        <div class="text-gray-900">Front-end Developer</div>
-                                        <div class="text-gray-500">Optimization</div>
+                                        <div class="text-gray-900">{{ money($position->amount) }}</div>
+                                        <div class="text-xs text-gray-500">{{ money($position->initial_amount) }}</div>
                                     </td>
                                     <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                        <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Active</span>
+                                        <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">{{ __('Active') }}</span>
                                     </td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">Member</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ ucfirst($position->strategy) }}</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $position->started_at ? date('d/m/Y', strtotime($position->started_at)) : __('Waiting')  }}</td>
                                     <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}<span class="sr-only">, Lindsay Walton</span></a>
+                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}<span class="sr-only">, {{ $position->asset->name }}</span></a>
                                     </td>
                                 </tr>
                                 @endforeach

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Positions;
 
-use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Cknow\Money\Money;
 
 class Listing extends Component
 {
