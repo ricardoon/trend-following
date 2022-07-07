@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('yahoo_code'); // for Yahoo! Finance
             $table->string('category'); //crypto, stock, option, etc.
+            $table->string('image');
             $table->integer('price_precision')->default(2); //number of decimal places
             $table->integer('quantity_precision')->default(2); //number of decimal places
             $table->integer('quote_precision')->default(2); //number of decimal places

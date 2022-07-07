@@ -6,6 +6,8 @@ use App\Http\Requests\AssetRequest;
 use App\Http\Resources\AssetResource;
 use App\Libraries\Binance;
 use App\Models\Asset;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AssetController extends BaseController
 {
@@ -32,8 +34,10 @@ class AssetController extends BaseController
 
         $exchange_info = $binance->trade()->getExchangeInfo();
 
+        $asset_code = '';
         foreach ($exchange_info['symbols'] as $symbol) {
             if ($symbol['symbol'] == $asset_validated['code']) {
+                $asset_code = $symbol['baseAsset'];
                 $asset_validated['price_precision'] = $symbol['pricePrecision'];
                 $asset_validated['quantity_precision'] = $symbol['quantityPrecision'];
                 $asset_validated['quote_precision'] = $symbol['quotePrecision'];
@@ -49,6 +53,29 @@ class AssetController extends BaseController
                 ],
                 422
             );
+        }
+
+        // download crypto asset image
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('get', 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=' . $asset_code, [
+                'headers' => [
+                    'X-CMC_PRO_API_KEY' => config('coinmarketcap.api_key'),
+                ],
+            ]);
+            $response_body = json_decode($response->getBody()->getContents(), true);
+            foreach ($response_body['data'] as $data) {
+                $logo_url = $data[0]['logo'];
+                break;
+            }
+            $filename = $asset_validated['category'] . '/' . $asset_code . '.png';
+            $contents = file_get_contents($logo_url);
+            Storage::disk('public')->put($filename, $contents);
+            $asset_validated['image'] = $filename;
+        } catch (\Exception $e) {
+            Log::channel('slack')->alert("Can't download logo for asset " . $asset_code, [
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $asset = Asset::create($asset_validated);

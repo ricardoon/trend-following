@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        @hasSection('title')
-        <title>@yield('title') · {{ config('app.name') }}</title>
+        @hasSection('head.title')
+        <title>@yield('head.title') · {{ config('app.name') }}</title>
         @else
         <title>{{ config('app.name') }}</title>
         @endif
@@ -44,16 +44,7 @@
                 </div>
                 <main class="flex-1">
                     <div class="py-6">
-                        <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-8">
-                            <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
-                        </div>
-                        <div class="px-4 mx-auto max-w-7xl sm:px-6 md:px-8">
-                            <!-- Replace with your content -->
-                            <div class="py-4">
-                                <div class="border-4 border-gray-200 border-dashed rounded-lg h-96"></div>
-                            </div>
-                            <!-- /End replace -->
-                        </div>
+                        @yield('content')
                     </div>
                 </main>
             </div>

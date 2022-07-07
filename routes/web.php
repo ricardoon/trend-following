@@ -7,14 +7,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/positions', function () {
-        return view('dashboard');
-    })->name('positions');
+    Route::get('/positions', \App\Http\Livewire\Positions\Listing::class)->name('positions');
+    // Route::get('/positions/{position}', \App\Http\Livewire\Positions\Display::class)->name('positions.display');
 
     Route::get('/settings', function () {
         return view('dashboard');

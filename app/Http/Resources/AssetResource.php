@@ -14,6 +14,7 @@ class AssetResource extends JsonResource
             'code' => $this->code,
             'yahoo_code' => $this->yahoo_code,
             'category' => $this->category,
+            'image' => asset('storage/' . $this->image),
             'price_precision' => $this->price_precision,
             'quantity_precision' => $this->quantity_precision,
             'quote_precision' => $this->quote_precision,
