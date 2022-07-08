@@ -30,7 +30,7 @@
         @livewireStyles
     </head>
     <body class="h-full font-sans antialiased">
-        <div class="min-h-screen bg-white" x-data="{ open: false }" @keydown.window.escape="open = false">
+        <div class="min-h-screen bg-gray-50" x-data="{ open: false }" @keydown.window.escape="open = false">
             @include('layouts.navigation')
 
             <div class="flex flex-col flex-1 md:pl-64">

@@ -10,7 +10,7 @@ class Listing extends Component
 {
     public function mount()
     {
-        $this->positions = Auth::user()->positions;
+        $this->positions = Auth::user()->positions()->active()->get();
     }
 
     public function render()

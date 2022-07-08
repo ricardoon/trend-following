@@ -23,6 +23,11 @@ class Position extends Model
         $query->where('ended_at', null);
     }
 
+    public function scopeInactive($query)
+    {
+        $query->where('ended_at', '!=', null);
+    }
+
     public function asset()
     {
         return $this->belongsTo(Asset::class);
