@@ -22,5 +22,10 @@
         "sass": "^1.51.0",
         "sass-loader": "^12.6.0",
         "tailwindcss": "^3.0.18"
+    },
+    "dependencies": {
+        "apexcharts": "^3.35.3",
+        "cleave.js": "^1.6.0",
+        "tippy.js": "^6.3.7"
     }
 }

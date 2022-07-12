@@ -7,10 +7,10 @@
             <p class="mt-2 text-sm text-gray-700">{{ __('Create new position for an asset within a strategy.') }}</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <a href="{{ route('positions') }}" class="inline-flex items-center justify-center py-2 text-sm font-medium sm:w-auto">
+            <x-admin.links.white href="{{ route('positions') }}">
                 <i class="mr-2 fas fa-angle-left"></i>
                 {{ __('Go back') }}
-            </a>
+            </x-admin.links.white>
         </div>
     </div>
     <div class="mt-10 shadow sm:rounded-md sm:overflow-hidden">
@@ -19,46 +19,74 @@
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="asset" class="block text-sm font-medium text-gray-700">{{ __('Asset') }}</label>
-                            <select id="asset" name="asset" autocomplete="asset-name" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <x-admin.form.label for="asset" tippy="{{ __('Escolha o ativo que deseja que o robô opere.') }}">
+                                {{ __('Asset') }}
+                            </x-admin.form.label>
+                            <x-admin.form.select id="asset" name="asset" wire:model.defer="asset">
                                 <option value="0">{{ __('Choose') }}</option>
                                 @foreach ($assets as $asset)
                                     <option value="{{ $asset->id }}">{{ $asset->name . ' - ' . $asset->code }}</option>
                                 @endforeach
-                            </select>
+                            </x-admin.form.select>
                         </div>
                         <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-                            <label for="strategy" class="block text-sm font-medium text-gray-700">{{ __('Strategy') }}</label>
-                            <select id="strategy" name="strategy" autocomplete="strategy-name" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <x-admin.form.label for="strategy" tippy="{{ __('Para qual estratégia sua posição deve ser operada.') }}">
+                                {{ __('Strategy') }}
+                            </x-admin.form.label>
+                            <x-admin.form.select id="strategy" name="strategy" wire:model.defer="strategy">
                                 <option value="0">{{ __('Choose') }}</option>
                                 @foreach (config('utils.strategies') as $key => $strategy)
                                     <option value="{{ $key }}">{{ $strategy }}</option>
                                 @endforeach
-                            </select>
+                            </x-admin.form.select>
                         </div>
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <label for="granularity" class="block text-sm font-medium text-gray-700">{{ __('Granularity') }}</label>
-                            <select id="granularity" name="granularity" autocomplete="granularity-name" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <x-admin.form.label for="granularity" tippy="{{ __('Qual a granularidade dos preços que deve ser feito o estudo e as operações. Hoje só é possível operar no gráfico diário (1d).') }}">
+                                {{ __('Granularity') }}
+                            </x-admin.form.label>
+                            <x-admin.form.select id="granularity" name="granularity" wire:model.defer="granularity">
                                 <option value="0">{{ __('Choose') }}</option>
                                 @foreach (config('utils.granularities') as $key => $granularity)
-                                    <option value="{{ $key }}">{{ $granularity }}</option>
+                                    <option value="{{ $granularity }}">{{ $granularity }}</option>
                                 @endforeach
-                            </select>
+                            </x-admin.form.select>
                         </div>
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <label for="amount" class="block text-sm font-medium text-gray-700">{{ __('Amount') }}</label>
-                            <input type="text" name="amount" id="amount" autocomplete="amount" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <x-admin.form.label for="amount" tippy="{{ __('Valor inicial da posição. Você precisa ter esse valor disponível na carteira de Futuros da Binance.') }}">
+                                {{ __('Amount') }}
+                            </x-admin.form.label>
+                            <x-admin.form.input type="text" name="amount" id="amount" wire:model.defer="amount" class="pl-10" x-data="{}" x-ref="amount" x-init="new Cleave($refs.amount, { numeral: true, numeralThousandsGroupStyle: 'thousand', delimiter: '.', numeralDecimalMark: ',', numeralPositiveOnly: true })">
+                                <x-slot name="left">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">
+                                            {{ __('R$') }}
+                                        </span>
+                                    </div>
+                                </x-slot>
+                            </x-admin.form.input>
                         </div>
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <label for="leverage" class="block text-sm font-medium text-gray-700">{{ __('Leverage') }}</label>
-                            <input type="text" name="leverage" id="leverage" autocomplete="leverage" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <x-admin.form.label for="leverage" tippy="{{ __('O quanto deseja entrar alavancado. Não recomendamos alavancar mais do que 3x, para diminuir o risco de ser liquidado pela Binance.') }}">
+                                {{ __('Leverage') }}
+                            </x-admin.form.label>
+                            <x-admin.form.input type="text" name="leverage" id="leverage" wire:model.defer="leverage" class="pr-3" x-data="{}" x-ref="leverage" x-init="new Cleave($refs.leverage, { blocks: [3], numericOnly: true })">
+                                <x-slot name="right">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">
+                                            {{ __('x') }}
+                                        </span>
+                                    </div>
+                                </x-slot>
+                            </x-admin.form.input>
                         </div>
                     </div>
                 </div>
                 <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
-                    <button type="submit" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                    <x-admin.buttons.primary submit>
+                        {{ __('Create') }}
+                    </x-admin.buttons.primary>
                 </div>
-                </div>
+            </div>
         </form>
     </div>
 </div>

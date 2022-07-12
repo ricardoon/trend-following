@@ -6,15 +6,22 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
     theme: {
+        fontFamily: {
+            'sans': [
+                'Inter',
+                'sans-serif'
+            ]
+        },
         extend: {
-            fontFamily: {
-                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+            colors: {
+                'primary': '#00bcd4',
+                'secondary': '#ff9800',
+                transparent: 'transparent',
+                current: 'currentColor',
             },
         },
     },
-
     plugins: [
         require('@tailwindcss/forms')
     ],

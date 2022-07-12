@@ -7,9 +7,15 @@ use Livewire\Component;
 
 class Create extends Component
 {
+    public $asset;
+    public $strategy = 'hilo';
+    public $granularity = '1d';
+    public $amount = '0,00';
+    public $leverage = '3';
+
     public function mount()
     {
-        $this->assets = Asset::all();
+        $this->assets = Asset::orderBy('name', 'ASC')->get();
     }
 
     public function render()
