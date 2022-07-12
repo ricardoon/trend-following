@@ -164,7 +164,7 @@ class HiloController extends BaseController
                         'symbol' => $symbol,
                         'leverage' => $position->leverage,
                     ]);
-                    $result = $binance->trade()->postOrder([
+                    $binance->trade()->postOrder([
                         'symbol' => $symbol,
                         'side' => strtoupper($request->action),
                         'type' => 'MARKET',

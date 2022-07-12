@@ -662,6 +662,9 @@ select {
 .col-span-6 {
   grid-column: span 6 / span 6;
 }
+.float-right {
+  float: right;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -868,6 +871,9 @@ select {
 }
 .flex-1 {
   flex: 1 1 0%;
+}
+.flex-auto {
+  flex: 1 1 auto;
 }
 .flex-shrink-0 {
   flex-shrink: 0;
@@ -1475,6 +1481,10 @@ select {
 .text-teal-800 {
   --tw-text-opacity: 1;
   color: rgb(17 94 89 / var(--tw-text-opacity));
+}
+.text-gray-100 {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;

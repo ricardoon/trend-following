@@ -29,7 +29,7 @@
                                 @endforeach
                             </x-admin.form.select>
                         </div>
-                        <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                        <div class="col-span-6 sm:col-span-3">
                             <x-admin.form.label for="strategy" tippy="{{ __('Para qual estratégia sua posição deve ser operada.') }}">
                                 {{ __('Strategy') }}
                             </x-admin.form.label>
@@ -40,7 +40,7 @@
                                 @endforeach
                             </x-admin.form.select>
                         </div>
-                        <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+                        <div class="col-span-6 sm:col-span-3">
                             <x-admin.form.label for="granularity" tippy="{{ __('Qual a granularidade dos preços que deve ser feito o estudo e as operações. Hoje só é possível operar no gráfico diário (1d).') }}">
                                 {{ __('Granularity') }}
                             </x-admin.form.label>
@@ -51,8 +51,8 @@
                                 @endforeach
                             </x-admin.form.select>
                         </div>
-                        <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <x-admin.form.label for="amount" tippy="{{ __('Valor inicial da posição. Você precisa ter esse valor disponível na carteira de Futuros da Binance.') }}">
+                        <div class="col-span-6 sm:col-span-3">
+                            <x-admin.form.label for="amount" max="Min: 100" tippy="{{ __('Valor inicial da posição. Você precisa ter esse valor disponível na carteira de Futuros da Binance.') }}">
                                 {{ __('Amount') }}
                             </x-admin.form.label>
                             <x-admin.form.input type="text" name="amount" id="amount" wire:model.defer="amount" class="pl-10" x-data="{}" x-ref="amount" x-init="new Cleave($refs.amount, { numeral: true, numeralThousandsGroupStyle: 'thousand', delimiter: '.', numeralDecimalMark: ',', numeralPositiveOnly: true })">
@@ -65,15 +65,29 @@
                                 </x-slot>
                             </x-admin.form.input>
                         </div>
-                        <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <x-admin.form.label for="leverage" tippy="{{ __('O quanto deseja entrar alavancado. Não recomendamos alavancar mais do que 3x, para diminuir o risco de ser liquidado pela Binance.') }}">
+                        <div class="col-span-6 sm:col-span-3">
+                            <x-admin.form.label for="leverage" max="Min: 1 | Max: 20" tippy="{{ __('O quanto deseja entrar alavancado. Não recomendamos alavancar mais do que 3x, para diminuir o risco de ser liquidado pela Binance.') }}">
                                 {{ __('Leverage') }}
                             </x-admin.form.label>
-                            <x-admin.form.input type="text" name="leverage" id="leverage" wire:model.defer="leverage" class="pr-3" x-data="{}" x-ref="leverage" x-init="new Cleave($refs.leverage, { blocks: [3], numericOnly: true })">
+                            <x-admin.form.input type="text" name="leverage" id="leverage" wire:model.defer="leverage" class="pr-3" x-data="{}" x-ref="leverage" x-init="new Cleave($refs.leverage, { blocks: [2], numericOnly: true })">
                                 <x-slot name="right">
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                         <span class="text-gray-500 sm:text-sm">
                                             {{ __('x') }}
+                                        </span>
+                                    </div>
+                                </x-slot>
+                            </x-admin.form.input>
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <x-admin.form.label for="max_stop" tippy="{{ __('O max stop é utilizado para entrar no meio de uma estratégia já rolando. Ex: A estratégia Hilo está no meio da tendência. O robô entrará caso o candle fechar no preço próximo tantos porcentos ao valor do Hilo.') }}">
+                                {{ __('Max Stop') }}
+                            </x-admin.form.label>
+                            <x-admin.form.input type="text" name="max_stop" id="max_stop" wire:model.defer="max_stop" class="pr-3" x-data="{}" x-ref="max_stop" x-init="new Cleave($refs.max_stop, { blocks: [2], numericOnly: true })">
+                                <x-slot name="right">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">
+                                            {{ __('%') }}
                                         </span>
                                     </div>
                                 </x-slot>

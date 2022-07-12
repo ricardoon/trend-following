@@ -39,6 +39,9 @@
                 </main>
             </div>
         </div>
+
+        <x-admin.notification />
+
         @livewireScripts
     </body>
 </html>
