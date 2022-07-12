@@ -20,7 +20,15 @@
             <div class="p-4">
                 <div class="flex items-start">
                     <div class="shrink-0">
+                    @if ($type == 'success')
                         <i class="text-green-400 far fa-fw fa-check-circle"></i>
+                    @elseif ($type == 'error')
+                        <i class="text-red-400 far fa-fw fa-times-circle"></i>
+                    @elseif ($type == 'warning')
+                        <i class="text-orange-400 far fa-fw fa-exclamation-circle"></i>
+                    @elseif ($type == 'info')
+                        <i class="text-blue-400 far fa-fw fa-info-circle"></i>
+                    @endif
                     </div>
 
                     <div class="ml-3 w-0 flex-1 pt-0.5">

@@ -38,6 +38,8 @@ class HiloController extends BaseController
             ]);
         } else {
 
+            $a = 0;
+
             foreach ($positions as $position) {
 
                 // $binance = new Binance(config('binance.api_key'), config('binance.api_secret'));
@@ -100,7 +102,7 @@ class HiloController extends BaseController
                     $log_message = 'Position order changed side from ' . $position_side . ' to ' . $request->action . '.';
                 } else {
                     // check if max stop loss for position lets me create one now
-                    $current_stop = (($request->hilo_price / $binance_position['markPrice']) - 1) * 100;
+                    $current_stop = (($request->hilo_price / $asset_price) - 1) * 100;
                     if ($position->max_stop < $current_stop) {
                         Log::info("Max stop not reached. Don't create position yet.", [
                             'asset' => $symbol,
@@ -141,6 +143,16 @@ class HiloController extends BaseController
 
                 $position_amount = $position->amount < $position->initial_amount ? $position->initial_amount : $position->amount;
                 $position_amount = $position_amount <= $usdt_balance ? $position_amount : $usdt_balance;
+
+                if ($position_amount == 0) {
+                    Log::info('Position amount is 0. Don\'t create position.', [
+                        'asset' => $symbol,
+                        'user' => $position->user->email,
+                        'usdt_balance' => $usdt_balance,
+                    ]);
+                    continue;
+                }
+
                 // remove 2% for margin
                 $quantity = ($position_amount * 0.98) / $asset_price;
                 $quantity = round($quantity * $position->leverage, $quantity_precision, PHP_ROUND_HALF_DOWN);

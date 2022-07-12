@@ -65,6 +65,7 @@ class Create extends Component
             ->first();
 
         if ($position) {
+            session()->flash('flash.type', 'warning');
             session()->flash('flash.message', __('Position already exists.'));
             return redirect()->route('positions');
         }
