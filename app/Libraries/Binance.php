@@ -142,7 +142,7 @@ class Trade extends Request
         return $this->exec();
     }
 
-    public function getAllOrders(array $data = [])
+    public function getOrders(array $data = [])
     {
         $this->type = 'get';
         $this->path = '/fapi/' . $this->version . '/allOrders';
@@ -154,6 +154,14 @@ class Trade extends Request
     {
         $this->type = 'get';
         $this->path = '/fapi/' . $this->version . '/positionRisk';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function getTrades(array $data = [])
+    {
+        $this->type = 'get';
+        $this->path = '/fapi/' . $this->version . '/userTrades';
         $this->data = array_merge($this->data, $data);
         return $this->exec();
     }
