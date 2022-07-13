@@ -57,7 +57,7 @@
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ ucfirst($position->strategy) }}</td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $position->started_at ? date('d/m/Y', strtotime($position->started_at)) : __('Waiting')  }}</td>
                                 <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}<span class="sr-only">, {{ $position->asset->name }}</span></a>
+                                    <a href="{{ route('positions.display', ['id' => $position->id]) }}" class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}<span class="sr-only">, {{ $position->asset->name }}</span></a>
                                 </td>
                             </tr>
                             @endforeach

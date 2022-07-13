@@ -14,7 +14,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('/positions', \App\Http\Livewire\Positions\Listing::class)->name('positions');
     Route::get('/positions/create', \App\Http\Livewire\Positions\Create::class)->name('positions.create');
-    // Route::get('/positions/{position}', \App\Http\Livewire\Positions\Display::class)->name('positions.display');
+    Route::get('/positions/{id}', \App\Http\Livewire\Positions\Display::class)->name('positions.display');
 
     Route::get('/settings', function () {
         return view('dashboard');

@@ -8,6 +8,8 @@ use Cknow\Money\Money;
 
 class Listing extends Component
 {
+    public $positions;
+
     public function mount()
     {
         $this->positions = Auth::user()->positions()->active()->get();
