@@ -15,6 +15,11 @@ class Settings extends Model
         'binance',
     ];
 
+    protected $casts = [
+        'general' => 'array',
+        'binance' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

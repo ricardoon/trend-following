@@ -27,6 +27,8 @@
             </x-admin.links.white>
             @if ($position->ended_at == null)
             <x-admin.buttons.danger onclick="alert('fechei?')">{{ __('Close position') }}</x-admin>
+            @else
+            <x-admin.buttons.secondary disabled>{{ __('Position closed') }}</x-admin.buttons.secondary>
             @endif
         </div>
     </div>
@@ -185,7 +187,7 @@
                         </x-admin.links.primary>
                     </div>
                     @else
-                    <p class="text-gray-500">{{ __('No position yet.') }}</p>
+                    <p class="text-gray-500">{{ __('No position found.') }}</p>
                     @endif
                 </div>
             </div>

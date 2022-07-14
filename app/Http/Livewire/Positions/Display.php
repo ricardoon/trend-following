@@ -3,18 +3,27 @@
 namespace App\Http\Livewire\Positions;
 
 use App\Libraries\Binance;
-use App\Models\Position;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class Display extends Component
 {
-    public Position $position;
+    public $position;
     public $binance_position;
     public $binance_orders;
 
-    public function mount()
+    public function mount($id)
     {
+        $this->position = Auth::user()->positions()->findOrFail($id);
+
+        // TODO: Save position info in our database instead of fetching it from Binance.
+        if ($this->position['ended_at'] != null) {
+            session()->flash('flash.type', 'warning');
+            session()->flash('flash.message', __('The position is closed.'));
+            return redirect()->route('positions.index');
+        }
+
         $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
         if (!$this->binance_position = Cache::get('binance_position_' . $this->position->asset->code)) {
@@ -50,8 +59,6 @@ class Display extends Component
 
             Cache::put('binance_order_' . $this->position->asset->code, $this->binance_orders, 600);
         }
-        // dd($this->binance_position);
-        // dd($this->binance_orders);
     }
 
     public function render()
