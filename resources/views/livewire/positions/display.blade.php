@@ -102,7 +102,7 @@
                                             <tr class="bg-white">
                                                 <td class="py-2 pl-4 pr-3 text-xs text-gray-900 whitespace-nowrap sm:pl-6">{{ $order['orderId'] }}</td>
                                                 <td class="px-2 py-2 text-xs font-medium text-center whitespace-nowrap">
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $order['side'] == 'SELL' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} lowercase">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium {{ $order['side'] == 'SELL' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} lowercase">
                                                         {{ __($order['side']) }}
                                                     </span>
                                                 </td>
@@ -112,7 +112,7 @@
                                                 <td class="px-2 py-2 text-xs text-center text-gray-900 whitespace-nowrap">{{ $order['executedQty'] }}</td>
                                                 <td class="px-2 py-2 text-xs text-center text-gray-900 whitespace-nowrap">{{ $order['status'] }}</td>
                                                 <td class="px-2 py-2 text-xs text-center text-gray-900 whitespace-nowrap">{{ $order['type'] }}</td>
-                                                <td class="px-2 py-2 text-xs text-center text-gray-900 whitespace-nowrap">{{ date('d/m/Y', $order['updateTime']) }}</td>
+                                                <td class="px-2 py-2 text-xs text-center text-gray-900 whitespace-nowrap">{{ date('d/m/Y', $order['updateTime']/1000) }}</td>
                                             </tr>
                                             @empty
                                             <tr class="text-center bg-white">
@@ -133,27 +133,52 @@
                 <h2 id="current-binance-position" class="text-lg font-medium text-gray-900">{{ __('Current position in Binance') }}</small></h2>
                 <div class="flow-root mt-6">
                     @if ($binance_position != null && $binance_position['positionAmt'] != 0)
-                    <ul role="list" class="-mb-4">
-                        <li>
-                            <div class="relative pb-8">
-                                <div class="relative flex space-x-3">
-                                    <div>
-                                        <span class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full ring-8 ring-white">
-                                            <i class="fas fa-arrow-up"></i>
-                                        </span>
-                                    </div>
-                                    <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                                        <div>
-                                            <p class="text-sm text-gray-500">Completed phone screening with <a href="#" class="font-medium text-gray-900">Martha Gardner</a></p>
-                                        </div>
-                                        <div class="text-sm text-right text-gray-500 whitespace-nowrap">
-                                            <time datetime="2020-09-28">Sep 28</time>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="-ml-4 -mr-4 sm:-ml-6 sm:-mr-6">
+                        <dl>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Side') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium {{ $binance_position['side'] == 'short' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} lowercase">
+                                        {{ $binance_position['side'] }}
+                                    </span>
+                                </dd>
                             </div>
-                        </li>
-                    </ul>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Margin') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['isolatedWallet']) }}</dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Quantity') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ $binance_position['positionAmt'] }}</dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Entry price') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['entryPrice']) }}</dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Liquidation Price') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['liquidationPrice']) }}</dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Result') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium {{ $binance_position['result'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                        <i class="fas {{ $binance_position['result'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} mr-1 text-xs"></i>
+                                        {{ abs($binance_position['result']) }}%
+                                    </span>
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Profit') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium {{ $binance_position['unRealizedProfit'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                        {{ money(abs($binance_position['unRealizedProfit'])) }}
+                                        <i class="fas {{ $binance_position['unRealizedProfit'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} ml-1 text-xs"></i>
+                                    </span>
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
                     <div class="flex flex-col mt-6 justify-stretch">
                         <x-admin.links.primary href="https://www.binance.com/en/futures/{{ $position->asset->code }}" target="_blank">
                             {{ __('See at Binance') }}

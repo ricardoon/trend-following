@@ -52,7 +52,9 @@
                                     <div class="text-xs text-gray-500">{{ money($position->initial_amount) }}</div>
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">{{ __('Active') }}</span>
+                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 {{ $position->ended_at ? 'text-red-800 bg-red-100' : 'text-green-800 bg-green-100' }} rounded-md">
+                                        {{ __($position->ended_at ? 'Closed' : 'Active') }}
+                                    </span>
                                 </td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ ucfirst($position->strategy) }}</td>
                                 <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $position->started_at ? date('d/m/Y', strtotime($position->started_at)) : __('Waiting')  }}</td>

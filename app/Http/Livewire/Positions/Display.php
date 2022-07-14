@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Positions;
 
 use App\Libraries\Binance;
 use App\Models\Position;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
@@ -23,6 +22,13 @@ class Display extends Component
                 $this->binance_position = $binance->trade()->getPosition([
                     'symbol' => $this->position->asset->code
                 ])[0];
+                // dont have a position yet
+                if ($this->binance_position['positionAmt'] == 0) {
+                    $this->binance_position = null;
+                } else {
+                    $this->binance_position['side'] = $this->binance_position['positionAmt'] > 0 ? 'long' : 'short';
+                    $this->binance_position['result'] = round(($this->binance_position['unRealizedProfit'] / $this->binance_position['isolatedWallet']) * 100, 0, PHP_ROUND_HALF_UP);
+                }
             } catch (\Exception $e) {
                 $this->binance_position = null;
             }
@@ -44,6 +50,8 @@ class Display extends Component
 
             Cache::put('binance_order_' . $this->position->asset->code, $this->binance_orders, 600);
         }
+        // dd($this->binance_position);
+        // dd($this->binance_orders);
     }
 
     public function render()
