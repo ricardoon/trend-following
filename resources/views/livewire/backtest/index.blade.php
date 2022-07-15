@@ -22,7 +22,7 @@
                     </div>
                     <div class="basis-1/5">
                         <label for="strategy" class="sr-only">{{ __('Strategy') }}</label>
-                        <x-admin.form.select id="strategy" name="strategy" wire:model.defer="strategy" class="mt-0 text-gray-500 border-l-0 rounded-none">
+                        <x-admin.form.select id="strategy" name="strategy" wire:model.defer="strategy" class="mt-0 border-l-0 rounded-none">
                             <option value="0">{{ __('Strategy') }}</option>
                             @foreach (config('utils.strategies') as $key => $strategy)
                                 <option value="{{ $key }}">{{ $strategy }}</option>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="basis-1/5">
                         <label for="granularity" class="sr-only">{{ __('Granularity') }}</label>
-                        <x-admin.form.select id="granularity" name="granularity" wire:model.defer="granularity" class="mt-0 text-gray-500 border-l-0 rounded-none rounded-r-md">
+                        <x-admin.form.select id="granularity" name="granularity" wire:model.defer="granularity" class="mt-0 border-l-0 rounded-none rounded-r-md">
                             <option value="0">{{ __('Granularity') }}</option>
                             @foreach (config('utils.granularities') as $key => $granularity)
                                 <option value="{{ $granularity }}">{{ $granularity }}</option>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="mt-3 sm:mt-0 sm:ml-4 sm:flex-shrink-0">
-                    <x-admin.buttons.primary submit class="w-full uppercase">
+                    <x-admin.buttons.primary submit wire:target="run_backtest" class="w-full uppercase">
                         <i class="mr-2 fas fa-play"></i>
                         {{ __('Run') }}
                     </x-admin.buttons.primary >
@@ -48,4 +48,44 @@
             </form>
         </div>
     </div>
+    @if ($backtest_result)
+    <div class="flex flex-col mt-8">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr class="divide-x divide-gray-200">
+                            @foreach ($backtest_result[0] as $key => $value)
+                                @if ($key === array_key_first((array)$backtest_result[0]))
+                                    <th scope="col" class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">{{ $key }}</th>
+                                @elseif ($key === array_key_last((array)$backtest_result[0]))
+                                    <th scope="col" class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">{{ $key }}</th>
+                                @else
+                                    <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $key }}</th>
+                                @endif
+                            @endforeach
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach ($backtest_result as $result)
+                            <tr class="divide-x divide-gray-200">
+                                @foreach ($result as $key => $value)
+                                    @if ($key === array_key_first((array)$backtest_result[0]))
+                                        <td class="py-4 pl-4 pr-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ $value }}</td>
+                                    @elseif ($key === array_key_last((array)$backtest_result[0]))
+                                        <td class="py-4 pl-4 pr-4 text-sm text-gray-500 whitespace-nowrap sm:pr-6">{{ $value }}</td>
+                                    @else
+                                        <td class="p-4 text-sm text-gray-500 whitespace-nowrap">{{ $value }}</td>
+                                    @endif
+                                @endforeach
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

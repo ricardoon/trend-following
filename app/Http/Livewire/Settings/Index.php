@@ -25,8 +25,8 @@ class Index extends Component
     {
         $this->settings = Auth::user()->settings;
         $this->commissions = Auth::user()->commissions;
-        // $this->binance_api_key = env('BINANCE_API_KEY');
-        // $this->binance_api_secret = env('BINANCE_API_SECRET');
+        $this->binance_api_key = env('BINANCE_API_KEY');
+        $this->binance_api_secret = env('BINANCE_API_SECRET');
     }
 
     public function render()

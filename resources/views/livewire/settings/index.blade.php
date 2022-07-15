@@ -48,7 +48,9 @@
                                 {{ __('Remove credentials') }}
                             </x-admin.buttons.transparent>
                             @endif
-                            <x-admin.buttons.primary submit>{{ __('Save') }}</x-admin.buttons.primary>
+                            <x-admin.buttons.primary submit wire:target="save_binance">
+                                {{ __('Save') }}
+                            </x-admin.buttons.primary>
                         </div>
                     </div>
                 </form>

@@ -8,9 +8,7 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', \App\Http\Livewire\Dashboard\Index::class)->name('dashboard');
 
     Route::get('/backtest', \App\Http\Livewire\Backtest\Index::class)->name('backtest');
 
