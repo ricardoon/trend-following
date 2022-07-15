@@ -30,17 +30,19 @@
                             </div>
                         </div>
                         <div class="relative px-4 py-3 text-right bg-gray-50 sm:px-6">
+                            <div class="absolute flex items-center mt-2">
                             @if (isset($settings->binance['api_key']))
-                            <span class="absolute flex items-center mt-2 text-sm font-medium text-gray-500 sm:mr-6">
+                            <span class="text-sm font-medium text-gray-500 sm:mr-6">
                                 <i class="fas fa-check-circle mr-1.5 text-green-400"></i>
                                 {{ __('Binance configured') }}
                             </span>
                             @else
-                            <x-admin.links.transparent class="absolute px-0 py-0 mt-2" href="https://www.binance.com/en/my/settings/api-management" target="_blank">
+                            <x-admin.links.transparent class="" href="https://www.binance.com/en/my/settings/api-management" target="_blank">
                                 {{ __('Generate API keys') }}
                                 <i class="ml-1 fas fa-external-link"></i>
                             </x-admin.links.transparent>
                             @endif
+                            </div>
                             <x-admin.buttons.primary submit>{{ __('Save') }}</x-admin.buttons.primary>
                         </div>
                     </div>
@@ -50,18 +52,20 @@
                 <div class="pt-6 bg-white shadow sm:rounded-md sm:overflow-hidden">
                     <div class="px-4 sm:px-6">
                         <h2 id="commissions-history-heading" class="text-lg font-medium leading-6 text-gray-900">{{ __('Commissions history') }}</h2>
+                        <p class="mt-1 text-sm text-gray-500">{{ __('You pay '. env('COMMISSION_FEE') .'% only on profitable trades.') }}</p>
                     </div>
                     <div class="flex flex-col mt-6">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                 <div class="overflow-hidden border-t border-gray-200">
-                                @if ($commissions)
+                                @forelse ($commissions as $commission)
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Date</th>
-                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Description</th>
-                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Amount</th>
+                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">{{ __('Date') }}</th>
+                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">{{ __('Position') }}</th>
+                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">{{ __('Profit') }}</th>
+                                                <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">{{ __('Commission') }}</th>
                                                 <th scope="col" class="relative px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                     <span class="sr-only">View receipt</span>
                                                 </th>
@@ -69,20 +73,27 @@
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
                                             <tr>
-                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                    <time datetime="2020-01-01">1/1/2020</time>
+                                                <td class="px-6 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                                    <time datetime="{{ $commission->created_at }}">{{ $commission->created_at->format('d/m/Y') }}</time>
                                                 </td>
-                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">Business Plan - Annual Billing</td>
-                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">CA$109.00</td>
+                                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                                                    <x-admin.links.primary href="{{ route('positions.display', ['id' => $commission->position_id]) }}" target="_blank">
+                                                        #{{ $commission->position_id }}
+                                                    </x-admin.links.primary>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">{{ money($commission->profit) }}</td>
+                                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">{{ money($commission->amount) }}</td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <a href="#" class="text-orange-600 hover:text-orange-900">View receipt</a>
+                                                    <x-admin.links.primary href="#" target="_blank">
+                                                        View receipt
+                                                    </x-admin.links.primary>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                @else
+                                @empty
                                     <p class="py-6 text-center text-gray-500">{{ __('No commissions yet.') }}</p>
-                                @endif
+                                @endforelse
                                 </div>
                             </div>
                         </div>

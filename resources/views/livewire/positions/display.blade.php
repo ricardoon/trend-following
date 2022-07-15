@@ -21,10 +21,10 @@
             </div>
         </div>
         <div class="mt-6 space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-            <x-admin.links.white href="{{ route('positions') }}">
+            <x-admin.links.btn-white href="{{ route('positions') }}">
                 <i class="mr-2 fas fa-angle-left"></i>
                 {{ __('Go back') }}
-            </x-admin.links.white>
+            </x-admin.links.btn-white>
             @if ($position->ended_at == null)
             <x-admin.buttons.danger onclick="alert('fechei?')">{{ __('Close position') }}</x-admin>
             @else
@@ -70,7 +70,7 @@
                         </dl>
                     </div>
                     <div>
-                        <x-admin.links.transparent href="https://finance.yahoo.com/quote/{{ $position->asset->yahoo_code }}" target="_blank">
+                        <x-admin.links.transparent class="block px-4 py-4 text-center bg-gray-50 sm:rounded-b-lg" href="https://finance.yahoo.com/quote/{{ $position->asset->yahoo_code }}" target="_blank">
                             {{ $position->asset->name . ' ' . __('in Yahoo Finance') }}
                             <i class="ml-1 fas fa-external-link"></i>
                         </x-admin>
@@ -182,9 +182,10 @@
                         </dl>
                     </div>
                     <div class="flex flex-col mt-6 justify-stretch">
-                        <x-admin.links.primary href="https://www.binance.com/en/futures/{{ $position->asset->code }}" target="_blank">
+                        <x-admin.links.btn-primary href="https://www.binance.com/en/futures/{{ $position->asset->code }}" target="_blank">
                             {{ __('See at Binance') }}
-                        </x-admin.links.primary>
+                            <i class="ml-2 fas fa-external-link"></i>
+                        </x-admin.links.btn-primary>
                     </div>
                     @else
                     <p class="text-gray-500">{{ __('No position found.') }}</p>

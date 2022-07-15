@@ -7,10 +7,10 @@
             <p class="mt-2 text-sm text-gray-700">{{ __('Create new position for an asset within a strategy.') }}</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <x-admin.links.white href="{{ route('positions') }}">
+            <x-admin.links.btn-white href="{{ route('positions') }}">
                 <i class="mr-2 fas fa-angle-left"></i>
                 {{ __('Go back') }}
-            </x-admin.links.white>
+            </x-admin.links.btn-white>
         </div>
     </div>
     <div class="mt-10 shadow sm:rounded-md sm:overflow-hidden">

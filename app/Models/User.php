@@ -37,4 +37,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Settings::class);
     }
+
+    function commissions()
+    {
+        return $this->hasMany(Commission::class);
+    }
 }

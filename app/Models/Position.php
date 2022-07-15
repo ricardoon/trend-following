@@ -41,4 +41,9 @@ class Position extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function commissions()
+    {
+        return $this->hasMany(Commission::class);
+    }
 }

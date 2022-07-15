@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('position_id');
-            $table->decimal('commission', 16, 2);
+            $table->decimal('profit', 16, 2);
+            $table->decimal('amount', 16, 2);
             $table->timestamps();
         });
     }

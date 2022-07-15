@@ -9,7 +9,7 @@ use Livewire\Component;
 class Index extends Component
 {
     public $settings;
-    public $commissions = null;
+    public $commissions;
     public $binance_api_key;
     public $binance_api_secret;
 
@@ -24,6 +24,7 @@ class Index extends Component
     public function mount()
     {
         $this->settings = Auth::user()->settings;
+        $this->commissions = Auth::user()->commissions;
     }
 
     public function render()

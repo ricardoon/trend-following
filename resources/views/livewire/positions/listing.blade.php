@@ -8,10 +8,10 @@
         </div>
         @if (count($positions) > 0)
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <a href="{{ route('positions.create') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+            <x-admin.links.btn-primary href="{{ route('positions.create') }}">
                 <i class="mr-2 fas fa-plus"></i>
                 {{ __('Add position') }}
-            </a>
+            </x-admin.links.btn-primary>
         </div>
         @endif
     </div>
