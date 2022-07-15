@@ -65,4 +65,15 @@ class Index extends Component
 
         return redirect()->route('settings');
     }
+
+    public function remove_binance()
+    {
+        $settings = Auth::user()->settings()->first();
+        $settings->binance = null;
+        $settings->save();
+
+        session()->flash('flash.message', __('Binance credentials removed.'));
+
+        return redirect()->route('settings');
+    }
 }

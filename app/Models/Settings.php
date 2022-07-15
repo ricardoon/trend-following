@@ -43,10 +43,15 @@ class Settings extends Model
                 }
                 return null;
             },
-            set: fn ($value) => json_encode([
-                'api_key' => Crypt::encryptString($value['api_key']),
-                'api_secret' => Crypt::encryptString($value['api_secret']),
-            ]),
+            set: function ($value) {
+                if (!is_array($value)) {
+                    return null;
+                }
+                return json_encode([
+                    'api_key' => Crypt::encryptString($value['api_key']),
+                    'api_secret' => Crypt::encryptString($value['api_secret']),
+                ]);
+            },
         );
     }
 }

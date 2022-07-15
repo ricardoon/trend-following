@@ -16,7 +16,7 @@
                         <div class="px-4 py-6 bg-white sm:p-6">
                             <div>
                                 <h2 id="binance-settings-heading" class="text-lg font-medium leading-6 text-gray-900">{{ __('Binance') }}</h2>
-                                <p class="mt-1 text-sm text-gray-500">{{ __('Update your Binance keys. Please note that updating your keys could affect your positions.') }}</p>
+                                <p class="mt-1 text-sm text-gray-500">{{ __('Update your Binance credential. Please note that updating your credential could affect your positions.') }}</p>
                             </div>
                             <div class="grid grid-cols-4 gap-6 mt-6">
                                 <div class="col-span-4 sm:col-span-2">
@@ -43,6 +43,11 @@
                             </x-admin.links.transparent>
                             @endif
                             </div>
+                            @if (isset($settings->binance['api_key']))
+                            <x-admin.buttons.transparent color="danger" wire:click="remove_binance">
+                                {{ __('Remove credentials') }}
+                            </x-admin.buttons.transparent>
+                            @endif
                             <x-admin.buttons.primary submit>{{ __('Save') }}</x-admin.buttons.primary>
                         </div>
                     </div>
