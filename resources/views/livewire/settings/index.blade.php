@@ -35,6 +35,11 @@
                                 <i class="fas fa-check-circle mr-1.5 text-green-400"></i>
                                 {{ __('Binance configured') }}
                             </span>
+                            @else
+                            <x-admin.links.transparent class="absolute px-0 py-0 mt-2" href="https://www.binance.com/en/my/settings/api-management" target="_blank">
+                                {{ __('Generate API keys') }}
+                                <i class="ml-1 fas fa-external-link"></i>
+                            </x-admin.links.transparent>
                             @endif
                             <x-admin.buttons.primary submit>{{ __('Save') }}</x-admin.buttons.primary>
                         </div>

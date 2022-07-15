@@ -1432,6 +1432,9 @@ select {
 .p-1 {
   padding: 0.25rem;
 }
+.p-0 {
+  padding: 0px;
+}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
