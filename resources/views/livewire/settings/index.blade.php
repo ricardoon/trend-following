@@ -10,7 +10,7 @@
     <div class="mt-8 xl:grid xl:grid-cols-12 xl:gap-x-5">
         <div class="space-y-6 xl:px-0 xl:col-span-10">
             <section aria-labelledby="binance-settings-heading">
-                <form action="#" method="POST" autocomplete="off">
+                <form wire:submit.prevent="save_binance" autocomplete="off">
                     <input autocomplete="false" name="hidden" type="text" style="display:none;">
                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                         <div class="px-4 py-6 bg-white sm:p-6">
@@ -20,16 +20,22 @@
                             </div>
                             <div class="grid grid-cols-4 gap-6 mt-6">
                                 <div class="col-span-4 sm:col-span-2">
-                                    <label for="first-name" class="block text-sm font-medium text-gray-700">{{ __('API Key') }}</label>
-                                    <x-admin.form.input type="text" name="binance_api_key"></x-admin.form.input>
+                                    <label for="binance_api_key" class="block text-sm font-medium text-gray-700">{{ __('API Key') }}</label>
+                                    <x-admin.form.input type="text" name="binance_api_key" id="binance_api_key" wire:model.defer="binance_api_key"></x-admin.form.input>
                                 </div>
                                 <div class="col-span-4 sm:col-span-2">
-                                    <label for="last-name" class="block text-sm font-medium text-gray-700">{{ __('API Secret') }}</label>
-                                    <x-admin.form.input type="text" name="binance_api_secret"></x-admin.form.input>
+                                    <label for="binance_api_secret" class="block text-sm font-medium text-gray-700">{{ __('API Secret') }}</label>
+                                    <x-admin.form.input type="text" name="binance_api_secret" id="binance_api_secret" wire:model.defer="binance_api_secret"></x-admin.form.input>
                                 </div>
                             </div>
                         </div>
-                        <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
+                        <div class="relative px-4 py-3 text-right bg-gray-50 sm:px-6">
+                            @if (isset($settings->binance['api_key']))
+                            <span class="absolute flex items-center mt-2 text-sm font-medium text-gray-500 sm:mr-6">
+                                <i class="fas fa-check-circle mr-1.5 text-green-400"></i>
+                                {{ __('Binance configured') }}
+                            </span>
+                            @endif
                             <x-admin.buttons.primary submit>{{ __('Save') }}</x-admin.buttons.primary>
                         </div>
                     </div>

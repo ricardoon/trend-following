@@ -98,6 +98,26 @@ class HiloController extends BaseController
                     }
                     sleep(1);
 
+                    // try {
+                    //     $binance = new Binance(env('BINANCE_API_KEY'), env('BINANCE_API_SECRET'), 'https://api.binance.com');
+                    //     // transfer from future to spot
+                    //     $transfer = $binance->account()->postTranferFutures([
+                    //         'asset' => 'USDT',
+                    //         'amount' => 55,
+                    //         'type' => 2,
+                    //     ]);
+                    //     // withdraw from spot to our wallet
+                    //     $withdraw = $binance->account()->postWithdraw([
+                    //         'coin' => 'USDT',
+                    //         'network' => 'BSC',
+                    //         'amount' => 10,
+                    //         'address' => '0x7bBa776A73DE3e80f395146e9CC849ca4632d2c7',
+                    //         'name' => '2RBots',
+                    //     ]);
+                    // } catch (\Exception $e) {
+                    //     dd($e->getMessage());
+                    // }
+
                     // change position side
                     $log_message = 'Position order changed side from ' . $position_side . ' to ' . $request->action . '.';
                 } else {

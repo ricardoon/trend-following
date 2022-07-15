@@ -4,7 +4,6 @@ namespace App\Libraries;
 
 use Exception;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
 
 class Binance
 {
@@ -74,6 +73,30 @@ class Account extends Request
     {
         $this->type = 'get';
         $this->path = '/fapi/' . $this->version . '/balance';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function getCoinNetwork(array $data = [])
+    {
+        $this->type = 'get';
+        $this->path = '/sapi/v1/capital/config/getall';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function postTranferFutures(array $data = [])
+    {
+        $this->type = 'post';
+        $this->path = '/sapi/v1/futures/transfer';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function postWithdraw(array $data = [])
+    {
+        $this->type = 'post';
+        $this->path = '/sapi/v1/capital/withdraw/apply';
         $this->data = array_merge($this->data, $data);
         return $this->exec();
     }
