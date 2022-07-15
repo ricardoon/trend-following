@@ -21,15 +21,19 @@
                 <nav class="px-2 mt-5 space-y-1">
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                         <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-500 far fa-home-lg-alt"></i>
-                        Dashboard
+                        {{ __('Dashboard') }}
+                    </a>
+                    <a href="{{ route('backtest') }}" class="{{ request()->routeIs('backtest') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 fas fa-vial group-hover:text-gray-500"></i>
+                        {{ __('Backtest') }}
                     </a>
                     <a href="{{ route('positions') }}" class="{{ request()->routeIs('positions') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                         <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 far fa-money-check-alt group-hover:text-gray-500"></i>
-                        Positions
+                        {{ __('Positions') }}
                     </a>
                     <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                         <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 far fa-cog group-hover:text-gray-500"></i>
-                        Settings
+                        {{ __('Settings') }}
                     </a>
                 </nav>
             </div>
@@ -69,15 +73,19 @@
             <nav class="flex-1 px-2 mt-5 space-y-1 bg-white">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-500 far fa-home-lg-alt"></i>
-                    Dashboard
+                    {{ __('Dashboard') }}
+                </a>
+                <a href="{{ route('backtest') }}" class="{{ request()->routeIs('backtest') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                    <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 fas fa-vial group-hover:text-gray-500"></i>
+                    {{ __('Backtest') }}
                 </a>
                 <a href="{{ route('positions') }}" class="{{ request()->routeIs('positions') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 far fa-money-check-alt group-hover:text-gray-500"></i>
-                    Positions
+                    {{ __('Positions') }}
                 </a>
                 <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} text-center group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <i class="flex-shrink-0 w-6 mr-3 text-lg text-gray-400 far fa-cog group-hover:text-gray-500"></i>
-                    Settings
+                    {{ __('Settings') }}
                 </a>
             </nav>
         </div>

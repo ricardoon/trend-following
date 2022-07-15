@@ -55,7 +55,7 @@
                             <x-admin.form.label for="amount" max="Min: 100" tippy="{{ __('Valor inicial da posição. Você precisa ter esse valor disponível na carteira de Futuros da Binance.') }}">
                                 {{ __('Amount') }}
                             </x-admin.form.label>
-                            <x-admin.form.input type="text" name="amount" id="amount" wire:model.defer="amount" class="pl-10" x-data="{}" x-ref="amount" x-init="new Cleave($refs.amount, { numeral: true, numeralThousandsGroupStyle: 'thousand', delimiter: '.', numeralDecimalMark: ',', numeralPositiveOnly: true })">
+                            <x-admin.form.input type="text" name="amount" id="amount" wire:model.defer="amount" class="pl-16" x-data="{}" x-ref="amount" x-init="new Cleave($refs.amount, { numeral: true, numeralThousandsGroupStyle: 'thousand', delimiter: '.', numeralDecimalMark: ',', numeralPositiveOnly: true })">
                                 <x-slot name="left">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <span class="text-gray-500 sm:text-sm">

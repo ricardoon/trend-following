@@ -25,6 +25,8 @@ class Index extends Component
     {
         $this->settings = Auth::user()->settings;
         $this->commissions = Auth::user()->commissions;
+        // $this->binance_api_key = env('BINANCE_API_KEY');
+        // $this->binance_api_secret = env('BINANCE_API_SECRET');
     }
 
     public function render()
@@ -68,11 +70,17 @@ class Index extends Component
 
     public function remove_binance()
     {
-        $settings = Auth::user()->settings()->first();
-        $settings->binance = null;
-        $settings->save();
+        $positions = Auth::user()->positions()->active()->get();
+        if ($positions->count() > 0) {
+            session()->flash('flash.type', 'warning');
+            session()->flash('flash.message', __('You must close all positions before removing Binance credentials.'));
+        } else {
+            $settings = Auth::user()->settings()->first();
+            $settings->binance = null;
+            $settings->save();
 
-        session()->flash('flash.message', __('Binance credentials removed.'));
+            session()->flash('flash.message', __('Binance credentials removed.'));
+        }
 
         return redirect()->route('settings');
     }

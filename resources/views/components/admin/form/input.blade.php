@@ -2,10 +2,11 @@
     'disabled' => false,
     'hideError' => false,
     'error' => $errors->get($attributes->whereStartsWith('wire:model')->first()),
-    'size' => 'normal'
+    'size' => 'normal',
+    'divClass' => '',
 ])
 
-<div class="relative flex mt-2 rounded-md shadow-sm">
+<div class="{{ $divClass ?? 'relative flex mt-2 rounded-md shadow-sm' }}">
     {!! $left ?? '' !!}
 
     <input
