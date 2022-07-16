@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    public $yahoo_code = 'BTC-USD';
+    public $yahoo_code;
     public $strategy = 'hilo';
     public $granularity = '1d';
     public $backtest_result;
