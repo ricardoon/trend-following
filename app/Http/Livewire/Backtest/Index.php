@@ -20,11 +20,6 @@ class Index extends Component
         ];
     }
 
-    public function mount()
-    {
-        // $this->yahoo_code = 'AAPL';
-    }
-
     public function render()
     {
         return view('livewire.backtest.index')
@@ -37,6 +32,6 @@ class Index extends Component
 
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start=01011900&end='.date('dmY'));
-        $this->backtest_result = json_decode($response->getBody()->getContents());
+        $this->backtest_result = json_decode($response->getBody()->getContents(), true);
     }
 }

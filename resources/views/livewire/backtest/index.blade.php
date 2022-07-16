@@ -57,27 +57,27 @@
                         <thead class="bg-gray-50">
                             <tr class="divide-x divide-gray-200">
                             @foreach ($backtest_result[0] as $key => $value)
-                                @if ($key === array_key_first((array)$backtest_result[0]))
-                                    <th scope="col" class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">{{ $key }}</th>
-                                @elseif ($key === array_key_last((array)$backtest_result[0]))
-                                    <th scope="col" class="py-3.5 pl-4 pr-4 text-left text-sm font-semibold text-gray-900 sm:pr-6">{{ $key }}</th>
-                                @else
-                                    <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $key }}</th>
-                                @endif
+                                <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $key }}</th>
                             @endforeach
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($backtest_result as $result)
+                        @foreach ($backtest_result as $results)
                             <tr class="divide-x divide-gray-200">
-                                @foreach ($result as $key => $value)
-                                    @if ($key === array_key_first((array)$backtest_result[0]))
-                                        <td class="py-4 pl-4 pr-4 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ $value }}</td>
-                                    @elseif ($key === array_key_last((array)$backtest_result[0]))
-                                        <td class="py-4 pl-4 pr-4 text-sm text-gray-500 whitespace-nowrap sm:pr-6">{{ $value }}</td>
-                                    @else
-                                        <td class="p-4 text-sm text-gray-500 whitespace-nowrap">{{ $value }}</td>
-                                    @endif
+                                @foreach ($results as $key => $result)
+                                    <td class="p-4 text-sm text-gray-500 whitespace-nowrap">
+                                        @if ($result['type'] == 'money')
+                                            {{ money($result['value']) }}
+                                        @elseif ($result['type'] == 'percentage')
+                                            {{ round($result['value'], 2) }}%
+                                        @elseif ($result['type'] == 'float')
+                                            {{ round($result['value'], 2) }}
+                                        @elseif ($result['type'] == 'date')
+                                            {{ date('d/m/Y', strtotime($result['value'])) }}
+                                        @else
+                                            {{ $result['value'] }}
+                                        @endif
+                                    </td>
                                 @endforeach
                             </tr>
                         @endforeach
