@@ -57,29 +57,33 @@
                         <thead class="bg-gray-50">
                             <tr class="divide-x divide-gray-200">
                             @foreach ($backtest_result[0] as $key => $value)
+                                @if (strtolower($key) != 'asset')
                                 <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $key }}</th>
+                                @endif
                             @endforeach
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($backtest_result as $results)
-                            <tr class="divide-x divide-gray-200">
-                                @foreach ($results as $key => $result)
-                                    <td class="p-4 text-sm text-gray-500 whitespace-nowrap">
-                                        @if ($result['type'] == 'money')
-                                            {{ money($result['value']) }}
-                                        @elseif ($result['type'] == 'percentage')
-                                            {{ round($result['value'], 2) }}%
-                                        @elseif ($result['type'] == 'float')
-                                            {{ round($result['value'], 2) }}
-                                        @elseif ($result['type'] == 'date')
-                                            {{ date('d/m/Y', strtotime($result['value'])) }}
-                                        @else
-                                            {{ $result['value'] }}
-                                        @endif
-                                    </td>
-                                @endforeach
-                            </tr>
+                        <tr class="divide-x divide-gray-200">
+                            @foreach ($results as $key => $result)
+                                @if (strtolower($key) != 'asset')
+                                <td class="p-4 text-sm text-center text-gray-500 whitespace-nowrap">
+                                    @if ($result['type'] == 'money')
+                                        {{ money($result['value']) }}
+                                    @elseif ($result['type'] == 'percentage')
+                                        {{ round($result['value'], 2) }}%
+                                    @elseif ($result['type'] == 'float')
+                                        {{ round($result['value'], 2) }}
+                                    @elseif ($result['type'] == 'date')
+                                        {{ date('d/m/Y', strtotime($result['value'])) }}
+                                    @else
+                                        {{ $result['value'] }}
+                                    @endif
+                                </td>
+                                @endif
+                            @endforeach
+                        </tr>
                         @endforeach
                         </tbody>
                     </table>

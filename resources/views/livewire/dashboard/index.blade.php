@@ -9,7 +9,7 @@
     </div>
     <div class="mt-5 xl:grid xl:grid-cols-12 xl:gap-x-5">
         <div class="space-y-6 xl:px-0 xl:col-span-10">
-            <i class="float-right mb-2 text-gray-800 fas fa-fw fa-exclamation-square" data-tippy-placement="left" data-tippy-content="{{ __('We calculate your performance from the last 30 days until now.') }}"></i>
+            <i class="float-right mb-2 text-gray-800 fas fa-fw fa-exclamation-square" data-tippy-placement="left" data-tippy-content="{{ __('We calculate your performance from the last 30 days until now and compare with the period before.') }}"></i>
             <dl class="grid clear-both grid-cols-1 mt-5 overflow-hidden bg-white divide-y divide-gray-200 rounded-lg shadow md:grid-cols-3 md:divide-y-0 md:divide-x">
                 <div class="px-4 py-5 sm:p-6">
                     <dt class="text-base font-normal text-gray-900">{{ __('Total Amount') }}</dt>
@@ -38,7 +38,7 @@
                     </dd>
                 </div>
                 <div class="px-4 py-5 sm:p-6">
-                    <dt class="text-base font-normal text-gray-900">Avg. Click Rate</dt>
+                    <dt class="text-base font-normal text-gray-900">Result</dt>
                     <dd class="flex items-baseline justify-between mt-1 md:block lg:flex">
                         <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
                             24.57%
@@ -51,6 +51,93 @@
                     </dd>
                 </div>
             </dl>
+        </div>
+    </div>
+    <div class="mt-16 xl:grid xl:grid-cols-12 xl:gap-x-5">
+        <div class="space-y-6 xl:px-0 xl:col-span-10" x-data>
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">
+                    {{ __('Results') }}
+                    <span class="text-sm text-gray-500">{{ __('last 30 days') }}</span>
+                </h3>
+                <i class="text-gray-800 fas fa-fw fa-exclamation-square cursor-help" data-tippy-placement="left" data-tippy-content="{!! __('We compare your result from the last 12 months with the previous 12 months.') !!}"></i>
+            </div>
+
+            <div class="mt-5 bg-white rounded-lg shadow">
+                <div class="px-4 pt-5 sm:p-6 sm:pb-0">
+                    <div class="flex gap-16">
+                        <div class="flex flex-col">
+                            <p class="text-sm text-gray-700">{{ $lastMonthStartDay->format('d/m') }} -> {{ $lastMonthEndDay->format('d/m') }}</p>
+                            <p class="text-lg text-indigo-600">{{ money($lastMonthAmount) }}</p>
+                        </div>
+
+                        <div class="flex flex-col opacity-60">
+                            <p class="text-sm text-gray-700">{{ $previousLastMonthStartDay->format('d/m') }} -> {{ $previousLastMonthEndDay->format('d/m') }}</p>
+                            <p class="text-lg text-blue-400">{{ money($previousLastMonthAmount) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-ref="chart" x-init="new window.chart($refs.chart, {
+                        chart: {
+                            id: 'orders-last-two-months',
+                            type: 'line',
+                            height: 150,
+                            foreColor: '#6b7280',
+                            toolbar: {
+                                show: false,
+                            },
+                            sparkline: {
+                                enabled: false
+                            },
+                            zoom: {
+                                enabled: false,
+                            },
+                        },
+                        colors: [
+                            'rgb(96,165,250)',
+                            'rgb(79,70,229)',
+                        ],
+                        dataLabels: {
+                            enabled: true
+                        },
+                        stroke: {
+                            width: 2,
+                            curve: 'straight',
+                        },
+                        series: [
+                            {
+                                data: {{ json_encode($previousLastMonth) }}
+                            },
+                            {
+                                data: {{ json_encode($lastMonth) }}
+                            }
+                        ],
+                        xaxis: {
+                            type: 'category',
+                            categories: {{ json_encode($days) }},
+                            labels: {
+                                show: true
+                            },
+                            tickPlacement: 'between'
+                        },
+                        yaxis: {
+                            type: 'numeric',
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(0)
+                                }
+                            }
+                        },
+                        tooltip: {
+                            enabled: false
+                        },
+                        legend: {
+                            show: false
+                        }
+                    }).render();"
+                ></div>
+            </div>
         </div>
     </div>
 </div>
