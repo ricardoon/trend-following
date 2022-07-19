@@ -16,7 +16,7 @@
         x-transition:leave-start="opacity-100 translate-y-0"
         x-transition:leave-end="opacity-0 translate-y-12 sm:-translate-y-12"
     >
-        <div class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md pointer-events-auto ring-1 ring-black ring-opacity-5">
+        <div class="w-full max-w-sm overflow-hidden {{ $type == 'success' ? 'bg-green-50' : ($type == 'error' ? 'bg-red-50' : ($type == 'warning' ? 'bg-orange-50' : 'bg-blue-50')) }} rounded-lg shadow-md pointer-events-auto ring-1 ring-black ring-opacity-5">
             <div class="p-4">
                 <div class="flex items-start">
                     <div class="shrink-0">

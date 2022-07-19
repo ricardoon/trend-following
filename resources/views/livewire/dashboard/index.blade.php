@@ -58,7 +58,7 @@
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">
                     {{ __('Results') }}
-                    <span class="text-sm text-gray-500">{{ __('last 30 days') }}</span>
+                    <span class="text-sm text-gray-500">{{ __('last 12 months') }}</span>
                 </h3>
                 <i class="text-gray-800 fas fa-fw fa-exclamation-square cursor-help" data-tippy-placement="left" data-tippy-content="{!! __('We compare your result from the last 12 months with the previous 12 months.') !!}"></i>
             </div>
@@ -67,20 +67,15 @@
                 <div class="px-4 pt-5 sm:p-6 sm:pb-0">
                     <div class="flex gap-16">
                         <div class="flex flex-col">
-                            <p class="text-sm text-gray-700">{{ $lastMonthStartDay->format('d/m') }} -> {{ $lastMonthEndDay->format('d/m') }}</p>
-                            <p class="text-lg text-indigo-600">{{ money($lastMonthAmount) }}</p>
-                        </div>
-
-                        <div class="flex flex-col opacity-60">
-                            <p class="text-sm text-gray-700">{{ $previousLastMonthStartDay->format('d/m') }} -> {{ $previousLastMonthEndDay->format('d/m') }}</p>
-                            <p class="text-lg text-blue-400">{{ money($previousLastMonthAmount) }}</p>
+                            <p class="text-sm text-gray-700">{{ __('Total in the period') }}</p>
+                            <p class="text-lg text-indigo-600">{{ money($lastYearAmount) }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div x-ref="chart" x-init="new window.chart($refs.chart, {
                         chart: {
-                            id: 'orders-last-two-months',
+                            id: 'orders-last-year',
                             type: 'line',
                             height: 150,
                             foreColor: '#6b7280',
@@ -95,11 +90,14 @@
                             },
                         },
                         colors: [
-                            'rgb(96,165,250)',
                             'rgb(79,70,229)',
+                            {{-- 'rgb(50,50,50)', --}}
                         ],
                         dataLabels: {
-                            enabled: true
+                            enabled: true,
+                            formatter: function(val) {
+                                return dollarUS.format(val)
+                            },
                         },
                         stroke: {
                             width: 2,
@@ -107,15 +105,12 @@
                         },
                         series: [
                             {
-                                data: {{ json_encode($previousLastMonth) }}
-                            },
-                            {
-                                data: {{ json_encode($lastMonth) }}
+                                data: {{ json_encode($lastYear) }}
                             }
                         ],
                         xaxis: {
                             type: 'category',
-                            categories: {{ json_encode($days) }},
+                            categories: {{ json_encode($months) }},
                             labels: {
                                 show: true
                             },
@@ -125,7 +120,7 @@
                             type: 'numeric',
                             labels: {
                                 formatter: function (val) {
-                                    return val.toFixed(0)
+                                    return dollarUS.format(val)
                                 }
                             }
                         },

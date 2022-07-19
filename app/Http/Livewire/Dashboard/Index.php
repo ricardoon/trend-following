@@ -9,18 +9,14 @@ use Livewire\Component;
 class Index extends Component
 {
     public $days;
-    public $previousLastMonthStartDay;
-    public $previousLastMonthEndDay;
-    public $previousLastMonth;
-    public $lastMonthStartDay;
-    public $lastMonthEndDay;
-    public $lastMonth;
+    public $lastYearStartDay;
+    public $lastYearEndDay;
+    public $lastYear;
 
     public function mount()
     {
-        $this->setPreviousThirtyDays();
-        $this->setLastMonthData();
-        $this->setPreviousLastMonthData();
+        $this->setPreviousTwelveMonths();
+        $this->setLastYearData();
     }
 
     public function render()
@@ -29,38 +25,22 @@ class Index extends Component
             ->extends('layouts.app');
     }
 
-    protected function setPreviousThirtyDays()
+    protected function setPreviousTwelveMonths()
     {
-        $this->days = Collection::times(365, function ($index) {
-            return __(now()->subDays($index)->format('m'));
+        $this->months = Collection::times(12, function ($index) {
+            return __(now()->subMonths($index)->format('M/y'));
         })->reverse()->values();
     }
 
-    protected function setLastMonthData()
+    protected function setLastYearData()
     {
-        $this->lastMonthStartDay = now()->subDays(30)->startOfDay();
-        $this->lastMonthEndDay = now()->subDays(1)->endOfDay();
+        $this->lastYearStartDay = now()->subMonths(12)->startOfDay();
+        $this->lastYearEndDay = now()->subDays(1)->endOfDay();
 
-        $orders = Order::whereBetween('created_at', [$this->lastMonthStartDay, $this->lastMonthEndDay])->get();
+        $orders = Order::whereBetween('created_at', [$this->lastYearStartDay, $this->lastYearEndDay])->get();
 
-        $this->lastMonthAmount = $orders->sum(fn ($order) => $order->amount);
-        $this->lastMonth = $this->days
-            ->flip()
-            ->map(fn () => 0)
-            ->merge($this->groupOrdersByDay($orders))
-            ->values()
-            ->toArray();
-    }
-
-    protected function setPreviousLastMonthData()
-    {
-        $this->previousLastMonthStartDay = now()->subDays(60)->startOfDay();
-        $this->previousLastMonthEndDay = now()->subDays(31)->endOfDay();
-
-        $orders = Order::whereBetween('created_at', [$this->previousLastMonthStartDay, $this->previousLastMonthEndDay])->get();
-
-        $this->previousLastMonthAmount = $orders->sum(fn ($order) => $order->amount);
-        $this->previousLastMonth = $this->days
+        $this->lastYearAmount = $orders->sum(fn ($order) => $order->size);
+        $this->lastYear = $this->months
             ->flip()
             ->map(fn () => 0)
             ->merge($this->groupOrdersByDay($orders))
@@ -70,6 +50,6 @@ class Index extends Component
 
     protected function groupOrdersByDay($orders)
     {
-        return $orders->groupBy(fn ($order) => __($order->created_at->format('l')))->map(fn ($orders) => $orders->count());
+        return $orders->groupBy(fn ($order) => __($order->created_at->format('M/y')))->map(fn ($orders) => $orders->sum(fn ($order) => $order->size));
     }
 }

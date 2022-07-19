@@ -58,7 +58,7 @@
                             <tr class="divide-x divide-gray-200">
                             @foreach ($backtest_result[0] as $key => $value)
                                 @if (strtolower($key) != 'asset')
-                                <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $key }}</th>
+                                <th scope="col" class="px-4 py-3.5 text-left text-sm font-semibold text-gray-900">{{ $value['text'] }}</th>
                                 @endif
                             @endforeach
                             </tr>
