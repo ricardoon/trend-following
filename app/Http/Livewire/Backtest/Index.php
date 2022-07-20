@@ -32,7 +32,7 @@ class Index extends Component
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start=20072012&end='.date('dmY'));
+            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start=01011900&end='.date('dmY'));
             $this->backtest_result = json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             $this->backtest_result = null;
