@@ -15,7 +15,7 @@
             <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                 <div class="flex items-center flex-shrink-0 px-4">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
+                        <x-application-logo class="block w-auto text-gray-600 fill-current h-14" />
                     </a>
                 </div>
                 <nav class="px-2 mt-5 space-y-1">
@@ -67,7 +67,7 @@
         <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
             <div class="flex items-center flex-shrink-0 px-4">
                 <a href="{{ route('dashboard') }}">
-                    <x-application-logo class="block w-auto h-12 text-gray-600 fill-current" />
+                    <x-application-logo class="block w-auto text-gray-600 fill-current h-14" />
                 </a>
             </div>
             <nav class="flex-1 px-2 mt-5 space-y-1 bg-white">
