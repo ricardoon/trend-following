@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $assets = Asset::factory(10)->create()->each(function ($asset) {
+        $assets = Asset::factory(8)->create()->each(function ($asset) {
             Hilo::factory(1)->create(
                 ['asset_id' => $asset->id]
             );
@@ -39,10 +39,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('qwe123456')
         ]);
 
-        Position::factory(3)->create([
+        Position::factory(1)->create([
             'user_id' => $user->id,
-            'asset_id' => $assets->where('code', 'BTCUSDT')->first()->id,
+            'asset_id' => 1,
         ])->each(function ($position) {
+            $position->update([
+                'asset_id' => Asset::inRandomOrder()->first()->id
+            ]);
             $position->orders()->saveMany(
                 Order::factory(rand(1, 3))->make()
             );

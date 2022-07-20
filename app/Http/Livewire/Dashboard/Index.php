@@ -28,7 +28,7 @@ class Index extends Component
     protected function setPreviousTwelveMonths()
     {
         $this->months = Collection::times(12, function ($index) {
-            return __(now()->subMonths($index)->format('M/y'));
+            return __(now()->addMonth(1)->subMonths($index)->format('M/y'));
         })->reverse()->values();
     }
 

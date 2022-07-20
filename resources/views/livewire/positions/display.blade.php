@@ -26,7 +26,7 @@
                 {{ __('Go back') }}
             </x-admin.links.btn-white>
             @if ($position->ended_at == null)
-            <x-admin.buttons.danger onclick="alert('fechei?')">{{ __('Close position') }}</x-admin>
+            <x-admin.buttons.danger wire:click="close">{{ __('Close position') }}</x-admin.buttons.danger>
             @else
             <x-admin.buttons.secondary disabled>{{ __('Position closed') }}</x-admin.buttons.secondary>
             @endif

@@ -26,13 +26,14 @@ class Display extends Component
         }
 
         try {
-            $binance = new Binance(Auth::user()->settings->binance['api_key'], Auth::user()->settings->binance['api_secret']);
+            // $binance = new Binance(Auth::user()->settings->binance['api_key'], Auth::user()->settings->binance['api_secret']);
+            $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
             if (!$this->binance_position = Cache::get('binance_position_' . $this->position->asset->code)) {
                 try {
                     $this->binance_position = $binance->trade()->getPosition([
-                        'symbol' => $this->position->asset->code
-                    ])[0];
+                            'symbol' => $this->position->asset->code
+                        ])[0];
                     // dont have a position yet
                     if ($this->binance_position['positionAmt'] == 0) {
                         $this->binance_position = null;
@@ -40,16 +41,16 @@ class Display extends Component
                         $this->binance_position['side'] = $this->binance_position['positionAmt'] > 0 ? 'long' : 'short';
                         $this->binance_position['result'] = round(($this->binance_position['unRealizedProfit'] / $this->binance_position['isolatedWallet']) * 100, 0, PHP_ROUND_HALF_UP);
                     }
+
+                    Cache::put('binance_position_' . $this->position->asset->code, $this->binance_position, 60);
                 } catch (\Exception $e) {
                     $this->binance_position = null;
                     Log::info('Can\'t get position from Binance.', [
-                        'route' => 'positions.display',
-                        'position' => $this->position,
-                        'error' => $e->getMessage()
-                    ]);
+                            'route' => 'positions.display',
+                            'position' => $this->position,
+                            'error' => $e->getMessage()
+                        ]);
                 }
-
-                Cache::put('binance_position_' . $this->position->asset->code, $this->binance_position, 600);
             }
 
             if (!$this->binance_orders = Cache::get('binance_orders_' . $this->position->asset->code)) {
@@ -60,6 +61,8 @@ class Display extends Component
                     ]);
                     $id = array_column($this->binance_orders, 'orderId');
                     array_multisort($id, SORT_DESC, $this->binance_orders);
+
+                    Cache::put('binance_order_' . $this->position->asset->code, $this->binance_orders, 60);
                 } catch (\Exception $e) {
                     $this->binance_orders = [];
                     Log::info('Can\'t get position orders from Binance.', [
@@ -68,8 +71,6 @@ class Display extends Component
                         'error' => $e->getMessage()
                     ]);
                 }
-
-                Cache::put('binance_order_' . $this->position->asset->code, $this->binance_orders, 600);
             }
         } catch (\Exception $e) {
             session()->flash('flash.type', 'error');
@@ -86,5 +87,40 @@ class Display extends Component
     {
         return view('livewire.positions.display')
             ->extends('layouts.app');
+    }
+
+    public function close()
+    {
+        try {
+            // close Binance position if it exists
+            if ($this->binance_position && $this->binance_position['positionAmt'] != 0) {
+                // $binance = new Binance(Auth::user()->settings->binance['api_key'], Auth::user()->settings->binance['api_secret']);
+                $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
+
+                $binance->trade()->postOrder([
+                    'symbol' => $this->position->asset->code,
+                    'side' => $this->binance_position['side'] == 'long' ? 'SELL' : 'BUY',
+                    'type' => 'MARKET',
+                    'quantity' => $this->binance_position['positionAmt'],
+                    'reduceOnly' => true,
+                ]);
+            }
+
+            $this->position->ended_at = now();
+            $this->position->save();
+
+            session()->flash('flash.type', 'success');
+            session()->flash('flash.message', __('Position closed successfully.'));
+        } catch (\Exception $e) {
+            session()->flash('flash.type', 'error');
+            session()->flash('flash.message', __('Could not connect to Binance. Check your credentials and try again.'));
+            Log::info('Can\'t connect to Binance.', [
+                'route' => 'positions.display',
+                'position' => $this->position,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('positions');
     }
 }

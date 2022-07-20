@@ -16,6 +16,7 @@ class HiloRequest extends FormRequest
         $rules = [
             'length' => 'required|integer',
             'last_check_at' => 'required|date',
+            'last_action' => 'sometimes|string|in:buy,sell',
         ];
 
         return $rules;
