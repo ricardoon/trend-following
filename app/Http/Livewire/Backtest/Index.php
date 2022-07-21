@@ -10,6 +10,8 @@ class Index extends Component
     public $strategy = 'hilo';
     public $granularity = '1d';
     public $backtest_result;
+    public $start_date;
+    public $end_date;
 
     public function rules()
     {
@@ -30,9 +32,12 @@ class Index extends Component
     {
         $this->validate();
 
+        $this->start_date ??= '01011900';
+        $this->end_date ??= date('dmY');
+
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start=01011900&end='.date('dmY'));
+            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start='.$this->start_date.'&end='.$this->end_date.'&strategy='.$this->strategy.'&granularity='.$this->granularity);
             $this->backtest_result = json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             $this->backtest_result = null;
