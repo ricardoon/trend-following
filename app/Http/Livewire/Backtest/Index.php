@@ -19,7 +19,14 @@ class Index extends Component
             'yahoo_code' => 'required|string|max:10',
             'strategy' => 'required|string|in:hilo',
             'granularity' => 'required|string|in:1d',
+            'start_date' => 'nullable|date_format:d/m/Y',
+            'end_date' => 'required|date_format:d/m/Y',
         ];
+    }
+
+    public function mount()
+    {
+        $this->end_date = date('d/m/Y');
     }
 
     public function render()
@@ -32,15 +39,18 @@ class Index extends Component
     {
         $this->validate();
 
-        $this->start_date ??= '01011900';
-        $this->end_date ??= date('dmY');
+        $start_date = !empty($this->start_date) ? str_replace('/', '', $this->start_date) : '01011900';
+        $end_date = str_replace('/', '', $this->end_date);
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start='.$this->start_date.'&end='.$this->end_date.'&strategy='.$this->strategy.'&granularity='.$this->granularity);
+            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start='.$start_date.'&end='.$end_date.'&strategy='.$this->strategy.'&granularity='.$this->granularity);
             $this->backtest_result = json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             $this->backtest_result = null;
+            session()->flash('flash.type', 'error');
+            session()->flash('flash.message', __('Could not run backtest with these values.'));
+            return redirect()->route('backtest');
         }
     }
 }

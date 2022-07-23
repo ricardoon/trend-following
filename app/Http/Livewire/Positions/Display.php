@@ -53,6 +53,8 @@ class Display extends Component
                 }
             }
 
+            dd($this->binance_position);
+
             if (!$this->binance_orders = Cache::get('binance_orders_' . $this->position->asset->code)) {
                 try {
                     $this->binance_orders = $binance->trade()->getOrders([
