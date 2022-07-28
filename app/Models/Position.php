@@ -12,9 +12,9 @@ class Position extends Model
         SoftDeletes;
 
     protected $fillable = [
-        'asset_id', 'user_id', 'strategy', 'granularity',
-        'initial_amount', 'leverage', 'amount',
-        'started_at', 'ended_at', 'max_stop'
+        'asset_id', 'user_id', 'exchange', 'strategy',
+        'granularity', 'initial_amount', 'leverage',
+        'amount', 'started_at', 'ended_at', 'max_stop'
     ];
 
     public function scopeActive($query)

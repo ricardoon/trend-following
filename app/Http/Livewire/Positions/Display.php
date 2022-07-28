@@ -11,7 +11,7 @@ use Livewire\Component;
 class Display extends Component
 {
     public $position;
-    public $binance_position = null;
+    public $exchange_position = null;
     public $binance_orders = [];
 
     public function mount($id)
@@ -29,22 +29,22 @@ class Display extends Component
             // $binance = new Binance(Auth::user()->settings->binance['api_key'], Auth::user()->settings->binance['api_secret']);
             $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
-            if (!$this->binance_position = Cache::get('binance_position_' . $this->position->asset->code)) {
+            if (!$this->exchange_position = Cache::get('exchange_position_' . $this->position->asset->code)) {
                 try {
-                    $this->binance_position = $binance->trade()->getPosition([
+                    $this->exchange_position = $binance->trade()->getPosition([
                             'symbol' => $this->position->asset->code
                         ])[0];
                     // dont have a position yet
-                    if ($this->binance_position['positionAmt'] == 0) {
-                        $this->binance_position = null;
+                    if ($this->exchange_position['positionAmt'] == 0) {
+                        $this->exchange_position = null;
                     } else {
-                        $this->binance_position['side'] = $this->binance_position['positionAmt'] > 0 ? 'long' : 'short';
-                        $this->binance_position['result'] = round(($this->binance_position['unRealizedProfit'] / $this->binance_position['isolatedWallet']) * 100, 0, PHP_ROUND_HALF_UP);
+                        $this->exchange_position['side'] = $this->exchange_position['positionAmt'] > 0 ? 'long' : 'short';
+                        $this->exchange_position['result'] = round(($this->exchange_position['unRealizedProfit'] / $this->exchange_position['isolatedWallet']) * 100, 0, PHP_ROUND_HALF_UP);
                     }
 
-                    Cache::put('binance_position_' . $this->position->asset->code, $this->binance_position, 60);
+                    Cache::put('exchange_position_' . $this->position->asset->code, $this->exchange_position, 60);
                 } catch (\Exception $e) {
-                    $this->binance_position = null;
+                    $this->exchange_position = null;
                     Log::info('Can\'t get position from Binance.', [
                             'route' => 'positions.display',
                             'position' => $this->position,
@@ -52,8 +52,6 @@ class Display extends Component
                         ]);
                 }
             }
-
-            dd($this->binance_position);
 
             if (!$this->binance_orders = Cache::get('binance_orders_' . $this->position->asset->code)) {
                 try {
@@ -95,15 +93,15 @@ class Display extends Component
     {
         try {
             // close Binance position if it exists
-            if ($this->binance_position && $this->binance_position['positionAmt'] != 0) {
+            if ($this->exchange_position && $this->exchange_position['positionAmt'] != 0) {
                 // $binance = new Binance(Auth::user()->settings->binance['api_key'], Auth::user()->settings->binance['api_secret']);
                 $binance = new Binance(config('binance.test_api_key'), config('binance.test_api_secret'), 'https://testnet.binancefuture.com');
 
                 $binance->trade()->postOrder([
                     'symbol' => $this->position->asset->code,
-                    'side' => $this->binance_position['side'] == 'long' ? 'SELL' : 'BUY',
+                    'side' => $this->exchange_position['side'] == 'long' ? 'SELL' : 'BUY',
                     'type' => 'MARKET',
-                    'quantity' => $this->binance_position['positionAmt'],
+                    'quantity' => $this->exchange_position['positionAmt'],
                     'reduceOnly' => true,
                 ]);
             }

@@ -24,6 +24,7 @@ class PositionRequest extends FormRequest
         } else {
             return [
                 'asset_id' => 'required|integer',
+                'exchange' => 'required|string|max:255|in:binance,bybit',
                 'strategy' => 'required|string|max:255|in:hilo',
                 'granularity' => 'required|string|max:255|in:1m,5m,15m,30m,1h,2h,4h,6h,8h,12h,1d,3d,1w,1M',
                 'initial_amount' => 'required|numeric',

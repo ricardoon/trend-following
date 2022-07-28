@@ -14,6 +14,7 @@ class PositionResource extends JsonResource
             'inital_amount' => $this->initial_amount,
             'leverage' => $this->leverage,
             'amount' => $this->amount,
+            'exchange' => $this->exchange,
             'strategy' => $this->strategy,
             'granularity' => $this->granularity,
             'started_at' => $this->start_datetime,

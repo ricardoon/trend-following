@@ -130,52 +130,56 @@
                 </div>
             </section>
         </div>
-        <section aria-labelledby="current-binance-position" class="lg:col-start-3 lg:col-span-1">
+        <section aria-labelledby="current-exchange-position" class="lg:col-start-3 lg:col-span-1">
             <div class="px-4 py-5 bg-white shadow sm:rounded-lg sm:px-6">
-                <h2 id="current-binance-position" class="text-lg font-medium text-gray-900">{{ __('Current position in Binance') }}</small></h2>
+                <h2 id="current-exchange-position" class="text-lg font-medium text-gray-900">{{ __('Current position in Binance') }}</small></h2>
                 <div class="flow-root mt-6">
-                    @if ($binance_position != null && $binance_position['positionAmt'] != 0)
+                    @if ($exchange_position != null && $exchange_position['positionAmt'] != 0)
                     <div class="-ml-4 -mr-4 sm:-ml-6 sm:-mr-6">
                         <dl>
                             <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Side') }}</dt>
                                 <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium {{ $binance_position['side'] == 'short' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} lowercase">
-                                        {{ $binance_position['side'] }}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium {{ $exchange_position['side'] == 'short' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} lowercase">
+                                        {{ $exchange_position['side'] }}
                                     </span>
                                 </dd>
                             </div>
                             <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Margin') }}</dt>
-                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['isolatedWallet']) }}</dd>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($exchange_position['isolatedWallet']) }}</dd>
                             </div>
                             <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Quantity') }}</dt>
-                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ $binance_position['positionAmt'] }}</dd>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ $exchange_position['positionAmt'] }}</dd>
                             </div>
                             <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Entry price') }}</dt>
-                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['entryPrice']) }}</dd>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($exchange_position['entryPrice']) }}</dd>
                             </div>
                             <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
-                                <dt class="text-xs font-medium text-gray-500">{{ __('Liquidation Price') }}</dt>
-                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($binance_position['liquidationPrice']) }}</dd>
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Current Price') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($exchange_position['markPrice']) }}</dd>
                             </div>
                             <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
+                                <dt class="text-xs font-medium text-gray-500">{{ __('Liquidation Price') }}</dt>
+                                <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">{{ money($exchange_position['liquidationPrice']) }}</dd>
+                            </div>
+                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Result') }}</dt>
                                 <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
-                                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium {{ $binance_position['result'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                                        <i class="fas {{ $binance_position['result'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} mr-1 text-xs"></i>
-                                        {{ abs($binance_position['result']) }}%
+                                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium {{ $exchange_position['result'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                        <i class="fas {{ $exchange_position['result'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} mr-1 text-xs"></i>
+                                        {{ abs($exchange_position['result']) }}%
                                     </span>
                                 </dd>
                             </div>
-                            <div class="grid grid-cols-3 px-4 py-3 bg-white sm:gap-4 sm:px-6">
+                            <div class="grid grid-cols-3 px-4 py-3 bg-gray-50 sm:gap-4 sm:px-6">
                                 <dt class="text-xs font-medium text-gray-500">{{ __('Profit') }}</dt>
                                 <dd class="col-span-2 mt-1 ml-2 text-xs text-gray-900 sm:mt-0">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium {{ $binance_position['unRealizedProfit'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ money(abs($binance_position['unRealizedProfit'])) }}
-                                        <i class="fas {{ $binance_position['unRealizedProfit'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} ml-1 text-xs"></i>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium {{ $exchange_position['unRealizedProfit'] < 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
+                                        {{ money(abs($exchange_position['unRealizedProfit'])) }}
+                                        <i class="fas {{ $exchange_position['unRealizedProfit'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up' }} ml-1 text-xs"></i>
                                     </span>
                                 </dd>
                             </div>

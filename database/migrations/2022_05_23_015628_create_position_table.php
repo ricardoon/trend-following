@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('asset_id');
             $table->unsignedBigInteger('user_id');
+            $table->string('exchange')->default('binance'); // binance, bybit.
             $table->string('strategy'); // hilo, etc.
             $table->string('granularity'); // 1m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
             $table->decimal('initial_amount', 36, 18); // initial amount of asset to buy/sell
@@ -30,6 +30,7 @@ return new class extends Migration
 
             $table->foreign('asset_id')->references('id')->on('assets');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->unique(['asset_id', 'user_id', 'exchange']);
             $table->index('strategy');
         });
     }

@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         });
 
         $users = User::factory(10)->create()->each(function ($user) use ($assets) {
-            Position::factory(3)->create([
+            Position::factory(1)->create([
                 'user_id' => $user->id,
                 'asset_id' => $assets->random()->id,
             ]);
