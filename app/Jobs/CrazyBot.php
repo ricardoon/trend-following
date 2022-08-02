@@ -139,16 +139,20 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                     $quantity = ($position_amount * 0.98) / $asset_price;
                     $quantity = round($quantity * $leverage, $quantity_precision, PHP_ROUND_HALF_DOWN);
 
+                    // Make sure margin type is ISOLATED
+                    try {
+                        $binance->trade()->postMarginType([
+                            'symbol' => $symbol,
+                            'marginType' => 'ISOLATED',
+                        ]);
+                    } catch (\Exception $e) {
+                    }
+
                     // try to create position on Binance
                     try {
                         // Cancel all open orders
                         $binance->trade()->cancelAllOpenOrders([
                             'symbol' => $symbol,
-                        ]);
-                        // Make sure margin type is ISOLATED
-                        $binance->trade()->postMarginType([
-                            'symbol' => $symbol,
-                            'marginType' => 'ISOLATED',
                         ]);
                         // Make sure leverage is set to position leverage
                         $binance->trade()->postLeverage([
