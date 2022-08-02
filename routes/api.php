@@ -18,7 +18,7 @@ Route::domain('api.' . env('APP_DOMAIN'))->group(function () {
         Route::get('assets/{asset_id}/hilos', 'App\Http\Controllers\HiloController@index');
         Route::get('assets/{asset_id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@show');
         Route::put('assets/{asset_id}/hilos/{granularity}', 'App\Http\Controllers\HiloController@update');
-        Route::post('assets/{asset_id}/hilos/{granularity}/notify', 'App\Http\Controllers\HiloController@notify');
+        // Route::post('assets/{asset_id}/hilos/{granularity}/notify', 'App\Http\Controllers\HiloController@notify');
 
         // Positions
         Route::apiResource('positions', PositionController::class);
