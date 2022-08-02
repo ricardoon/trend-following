@@ -9,6 +9,7 @@
         "cknow/laravel-money": "^7.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.11",
+        "laravel/horizon": "^5.9",
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.7",
         "linwj/binance": "^2.2",
