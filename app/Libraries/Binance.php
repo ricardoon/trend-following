@@ -30,7 +30,7 @@ class Binance
         ];
     }
 
-    function setOptions(array $options = [])
+    public function setOptions(array $options = [])
     {
         $this->options = $options;
     }
@@ -54,7 +54,7 @@ class Account extends Request
     //Default seting
     protected $version = 'v2';
 
-    function __construct(array $data)
+    public function __construct(array $data)
     {
         parent::__construct($data);
 
@@ -110,7 +110,7 @@ class Trade extends Request
     //Default seting
     protected $version = 'v1';
 
-    function __construct(array $data)
+    public function __construct(array $data)
     {
         parent::__construct($data);
 
@@ -153,6 +153,14 @@ class Trade extends Request
     {
         $this->type = 'get';
         $this->path = '/fapi/' . $this->version . '/openOrders';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
+    public function cancelAllOpenOrders(array $data = [])
+    {
+        $this->type = 'delete';
+        $this->path = '/fapi/v1/allOpenOrders';
         $this->data = array_merge($this->data, $data);
         return $this->exec();
     }
@@ -256,8 +264,11 @@ class Request
     {
         if (!empty($this->data)) {
             foreach ($this->data as $k1 => $v1) {
-                if (is_array($v1)) $this->query .= $k1 . '=' . urlencode(json_encode($v1)) . '&';
-                else $this->query .= $k1 . '=' . $v1 . '&';
+                if (is_array($v1)) {
+                    $this->query .= $k1 . '=' . urlencode(json_encode($v1)) . '&';
+                } else {
+                    $this->query .= $k1 . '=' . $v1 . '&';
+                }
             }
             $this->query = substr($this->query, 0, -1);
 
@@ -283,7 +294,9 @@ class Request
 
     protected function options()
     {
-        if (isset($this->options['headers'])) $this->headers = array_merge($this->headers, $this->options['headers']);
+        if (isset($this->options['headers'])) {
+            $this->headers = array_merge($this->headers, $this->options['headers']);
+        }
 
         $this->options['headers'] = $this->headers;
         $this->options['timeout'] = $this->options['timeout'] ?? 60;
