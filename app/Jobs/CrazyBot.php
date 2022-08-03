@@ -61,6 +61,7 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                     'code' => $db_asset->code,
                     'action' => $hilo->last_action ?? 'buy',
                     'quantity_precision' => $db_asset->quantity_precision,
+                    'price_precision' => $db_asset->price_precision,
                 ];
             }
 
@@ -70,6 +71,7 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                 $symbol = $assets[$position->asset_id]['code'];
                 $action = $assets[$position->asset_id]['action'];
                 $quantity_precision = $assets[$position->asset_id]['quantity_precision'];
+                $price_precision = $assets[$position->asset_id]['price_precision'];
 
                 try {
                     $binance_position = $binance->trade()->getPosition([
@@ -96,7 +98,7 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         'binance_position' => $binance_position,
                     ]);
 
-                    dump($binance_position, $position_side, $asset_price);
+                // dump($binance_position, $position_side, $asset_price);
                 } else {
                     // get account balance
                     try {
@@ -123,11 +125,11 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         }
                     }
 
-                    $position_amount = $position->amount < $position->initial_amount ? $position->initial_amount : $position->amount;
+                    $position_amount = $position->amount != null ? $position->amount : $position->initial_amount;
                     $position_amount = $position_amount <= $usdt_balance ? $position_amount : $usdt_balance;
                     // dump('position_amount', $position_amount);
 
-                    if ($position_amount == 0) {
+                    if ($position_amount <= 55) {
                         Log::info('Position amount is 0. Don\'t create position.', [
                             'schedule' => 'CrazyBot',
                             'asset' => $symbol,
@@ -193,14 +195,32 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         continue;
                     }
 
+                    if ($binance_position['positionAmt'] != 0) {
+                        $log_message = 'Position created in binance.';
+                        $position->update([
+                            'amount' => $binance_position['isolatedMargin'],
+                            'started_at' => $position->started_at ?? now(),
+                        ]);
+                    } else {
+                        $log_message = 'Position not created in binance.';
+                    }
+
+                    Log::info($log_message, [
+                        'schedule' => 'CrazyBot',
+                        'asset' => $symbol,
+                        'user' => $position->user->email,
+                        'action' => $action,
+                        'binance_position' => $binance_position,
+                    ]);
+
                     $asset_price = $binance_position['entryPrice'];
 
                     $stop_loss_price = $action == 'buy' ? $asset_price * (1 - $stop_loss) : $asset_price * (1 + $stop_loss);
                     // dump('stop_loss', $asset_price, $stop_loss, 1 - $stop_loss, $stop_loss_price);
-                    $stop_loss_price = round($stop_loss_price, $quantity_precision, PHP_ROUND_HALF_DOWN);
+                    $stop_loss_price = round($stop_loss_price, $price_precision, PHP_ROUND_HALF_DOWN);
                     $take_profit_price = $action == 'buy' ? $asset_price * (1 + $take_profit) : $asset_price * (1 - $take_profit);
                     // dump('take_profit', $asset_price, $take_profit, 1 + $take_profit, $take_profit_price);
-                    $take_profit_price = round($take_profit_price, $quantity_precision, PHP_ROUND_HALF_DOWN);
+                    $take_profit_price = round($take_profit_price, $price_precision, PHP_ROUND_HALF_DOWN);
                     $stop_action = $action == 'buy' ? 'sell' : 'buy';
 
                     try {
@@ -231,24 +251,6 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         ]);
                         continue;
                     }
-
-                    if ($binance_position['positionAmt'] != 0) {
-                        $log_message = 'Position created in binance.';
-                        $position->update([
-                            'amount' => $binance_position['isolatedMargin'],
-                            'started_at' => $position->started_at ?? now(),
-                        ]);
-                    } else {
-                        $log_message = 'Position not created in binance.';
-                    }
-
-                    Log::info($log_message, [
-                        'schedule' => 'CrazyBot',
-                        'asset' => $symbol,
-                        'user' => $position->user->email,
-                        'action' => $action,
-                        'binance_position' => $binance_position,
-                    ]);
                 }
             }
         }
