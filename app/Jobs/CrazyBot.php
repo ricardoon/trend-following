@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Libraries\Binance;
 use App\Models\Asset;
+use App\Models\Hilo;
 use App\Models\Position;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -55,9 +56,10 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
             $db_assets = Asset::whereIn('id', $asset_ids)->get();
             $assets = [];
             foreach ($db_assets as $db_asset) {
+                $hilo = Hilo::where('asset_id', $db_asset->id)->where('granularity', '1d')->first();
                 $assets[$db_asset->id] = [
                     'code' => $db_asset->code,
-                    'action' => $db_asset->last_action ?? 'buy',
+                    'action' => $hilo->last_action ?? 'buy',
                     'quantity_precision' => $db_asset->quantity_precision,
                 ];
             }
