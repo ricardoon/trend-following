@@ -43,9 +43,9 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         // Config for bitcoin
-        $stop_loss = 0.02;
-        $take_profit = 0.0625;
-        $leverage = 4;
+        $stop_loss = 0.001;
+        $take_profit = 0.005;
+        $leverage = 50;
 
         if ($this->positions->count() === 0) {
             Log::info('No active positions found.', [
@@ -72,6 +72,11 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                 $action = $assets[$position->asset_id]['action'];
                 $quantity_precision = $assets[$position->asset_id]['quantity_precision'];
                 $price_precision = $assets[$position->asset_id]['price_precision'];
+                if ($position->user->id == 11) {
+                    $leverage = 50;
+                } else {
+                    $leverage = 20;
+                }
 
                 try {
                     $binance_position = $binance->trade()->getPosition([
