@@ -151,7 +151,7 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                     // Notify Profits/Losses
                     $profit = $binance_position['isolatedMargin'] - 95;
                     if ($profit != 0 && date('i') == '00') { // every hour
-                        Log::channel('slack')->alert(($profit > 0 ? 'Parabéns' : 'Que pena').", você está ".money($profit)." mais ".($profit > 0 ? 'rico' : 'pobre').".", [
+                        Log::channel('slack')->info(($profit > 0 ? 'Parabéns' : 'Que pena').", você está ".money($profit)." mais ".($profit > 0 ? 'rico' : 'pobre')." do que quando começou.", [
                             'schedule' => 'CrazyBot',
                             'asset' => $symbol,
                             'user' => $position->user->email,
