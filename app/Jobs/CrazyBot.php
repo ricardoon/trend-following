@@ -103,6 +103,10 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         'binance_position' => $binance_position,
                     ]);
 
+                    $position->update([
+                        'amount' => $binance_position['isolatedMargin']
+                    ]);
+
                 // dump($binance_position, $position_side, $asset_price);
                 } else {
                     // get account balance
