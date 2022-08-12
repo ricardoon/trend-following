@@ -148,6 +148,16 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         continue;
                     }
 
+                    // Notify Profits/Losses
+                    $profit = $binance_position['isolatedMargin'] - 95;
+                    if ($profit != 0 && date('i') == '00') { // every hour
+                        Log::channel('slack')->alert(($profit > 0 ? 'Parabéns' : 'Que pena').", você está ".money($profit)." mais ".($profit > 0 ? 'rico' : 'pobre').".", [
+                            'schedule' => 'CrazyBot',
+                            'asset' => $symbol,
+                            'user' => $position->user->email,
+                        ]);
+                    }
+
                     // remove 2% for margin
                     $quantity = ($position_amount * 0.98) / $asset_price;
                     $quantity = round($quantity * $leverage, $quantity_precision, PHP_ROUND_HALF_DOWN);
