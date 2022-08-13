@@ -159,7 +159,7 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                     }
 
                     // remove 2% for margin
-                    $quantity = ($position_amount * 0.98) / $asset_price;
+                    $quantity = ($position_amount * 0.95) / $asset_price;
                     $quantity = round($quantity * $leverage, $quantity_precision, PHP_ROUND_HALF_DOWN);
 
                     // Make sure margin type is ISOLATED
