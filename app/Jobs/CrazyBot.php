@@ -107,6 +107,16 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                         'amount' => $binance_position['isolatedMargin']
                     ]);
 
+                    // Notify Profits/Losses
+                    $profit = $binance_position['isolatedMargin'] - 95;
+                    if ($profit != 0 && date('i') == '10') { // every hour
+                        Log::channel('slack')->info(($profit > 0 ? 'Parabéns' : 'Que pena').", você está ".money($profit)." mais ".($profit > 0 ? 'rico' : 'pobre')." do que quando começou.", [
+                            'schedule' => 'CrazyBot',
+                            'asset' => $symbol,
+                            'user' => $position->user->email,
+                        ]);
+                    }
+
                 // dump($binance_position, $position_side, $asset_price);
                 } else {
                     // get account balance
@@ -146,16 +156,6 @@ class CrazyBot implements ShouldQueue, ShouldBeUnique
                             'usdt_balance' => $usdt_balance,
                         ]);
                         continue;
-                    }
-
-                    // Notify Profits/Losses
-                    $profit = $binance_position['isolatedMargin'] - 95;
-                    if ($profit != 0 && date('i') == '00') { // every hour
-                        Log::channel('slack')->info(($profit > 0 ? 'Parabéns' : 'Que pena').", você está ".money($profit)." mais ".($profit > 0 ? 'rico' : 'pobre')." do que quando começou.", [
-                            'schedule' => 'CrazyBot',
-                            'asset' => $symbol,
-                            'user' => $position->user->email,
-                        ]);
                     }
 
                     // remove 2% for margin
