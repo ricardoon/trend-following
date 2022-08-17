@@ -57,7 +57,7 @@ class SaveAssetData implements ShouldQueue
                     'low' => $candle[0][3],
                     'close' => $candle[0][4],
                     'adj_close' => $candle[0][4],
-                    'volume' => $candle[0][5],
+                    'volume' => $candle[0][7],
                 ]);
             } catch (\Exception $e) {
                 Log::info('Can\'t save asset candle.', [
