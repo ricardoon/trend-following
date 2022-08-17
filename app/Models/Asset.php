@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Asset extends Model
 {
-    use HasFactory,
-        SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name', 'code', 'yahoo_code', 'category', 'image',
@@ -24,5 +24,10 @@ class Asset extends Model
     public function positions()
     {
         return $this->hasMany(Position::class);
+    }
+
+    public function history()
+    {
+        return $this->hasMany(History::class);
     }
 }

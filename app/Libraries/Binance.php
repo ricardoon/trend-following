@@ -117,6 +117,14 @@ class Trade extends Request
         $this->data['timestamp'] = time() . '000';
     }
 
+    public function getCandle(array $data = [])
+    {
+        $this->type = 'get';
+        $this->path = '/fapi/v1/klines';
+        $this->data = array_merge($this->data, $data);
+        return $this->exec();
+    }
+
     public function postMarginType(array $data = [])
     {
         $this->type = 'POST';
