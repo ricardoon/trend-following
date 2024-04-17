@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $assets = Asset::factory(8)->create()->each(function ($asset) {
+        $assets = Asset::factory(29)->create()->each(function ($asset) {
             Hilo::factory(1)->create(
                 ['asset_id' => $asset->id]
             );
