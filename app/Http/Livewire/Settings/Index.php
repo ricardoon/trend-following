@@ -45,7 +45,7 @@ class Index extends Component
             $binance->account()->getInfo();
         } catch (\Exception $e) {
             session()->flash('flash.type', 'warning');
-            session()->flash('flash.message', __('Invalid Binance API credentials.'));
+            session()->flash('flash.message', __('Invalid Binance API credentials. Error: '.$e->getMessage()));
             return redirect()->route('settings');
         }
 
