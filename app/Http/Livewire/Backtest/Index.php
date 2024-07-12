@@ -44,7 +44,7 @@ class Index extends Component
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://elegant-monsieur-00286.herokuapp.com/best_window_report?asset='.$this->yahoo_code.'&start='.$start_date.'&end='.$end_date.'&strategy='.$this->strategy.'&granularity='.$this->granularity);
+            $response = $client->request('GET', 'https://rogeriopovoa.pythonanywhere.com/best_window_report?asset='.$this->yahoo_code.'&start='.$start_date.'&end='.$end_date.'&strategy='.$this->strategy.'&granularity='.$this->granularity);
             $this->backtest_result = json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             $this->backtest_result = null;
